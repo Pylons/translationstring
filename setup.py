@@ -24,7 +24,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = ['zope.i18nmessageid']
 
 setup(name='internatl',
-      version='0.0',
+      version='0.1',
       description=('Utility library for internationalization relied on by '
                    'various Repoze packages'),
       long_description=README + '\n\n' +  CHANGES,

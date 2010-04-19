@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# repoze.atemplate documentation build configuration file
+# internatl documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its containing
 # dir.
@@ -19,6 +19,18 @@ import sys, os
 # make it absolute, like shown here.
 #sys.path.append(os.path.abspath('some/directory'))
 
+parent = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(os.path.abspath(parent))
+wd = os.getcwd()
+os.chdir(parent)
+os.system('%s setup.py test -q' % sys.executable)
+os.chdir(wd)
+
+for item in os.listdir(parent):
+    if item.endswith('.egg'):
+        sys.path.append(os.path.join(parent, item))
+
+
 # General configuration
 # ---------------------
 
@@ -36,16 +48,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'repoze.atemplate'
-copyright = '2009, Repoze Developers <repoze-dev@lists.repoze.org>'
+project = 'internatl'
+copyright = '2010, Repoze Developers <repoze-dev@lists.repoze.org>'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '0.0'
+version = '0.1'
 # The full version, including alpha/beta/rc tags.
-release = '0.0'
+release = version
 
 # There are two options for replacing |today|: either, you set today to
 # some non-false value, then it is used:
@@ -147,7 +159,7 @@ html_last_updated_fmt = '%b %d, %Y'
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'atemplatedoc'
+htmlhelp_basename = 'internatldoc'
 
 
 # Options for LaTeX output
@@ -163,7 +175,7 @@ htmlhelp_basename = 'atemplatedoc'
 # (source start file, target name, title,
 #  author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'atemplate.tex', 'repoze.atemplate Documentation',
+  ('index', 'internatl.tex', 'internatl Documentation',
    'Repoze Developers', 'manual'),
 ]
 

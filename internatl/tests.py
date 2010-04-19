@@ -25,7 +25,7 @@ class TestTranslationString(unittest.TestCase):
 
 class TestTranslationStringFactory(unittest.TestCase):
     def _makeOne(self, domain):
-        from intenatl import TranslationStringFactory
+        from internatl import TranslationStringFactory
         return TranslationStringFactory(domain)
 
     def test_allargs(self):
@@ -39,7 +39,7 @@ class TestTranslationStringFactory(unittest.TestCase):
 
 class TestChameleonTranslate(unittest.TestCase):
     def _makeOne(self, translator):
-        from internat import ChameleonTranslate
+        from internatl import ChameleonTranslate
         return ChameleonTranslate(translator)
 
     def test_text_None(self):
@@ -71,7 +71,7 @@ class TestChameleonTranslate(unittest.TestCase):
 
 class Test_interpolate(unittest.TestCase):
     def _callFUT(self, text, mapping=None):
-        from repoze.bfg.i18n import interpolate
+        from internatl import interpolate
         return interpolate(text, mapping)
 
     def test_substitution(self):

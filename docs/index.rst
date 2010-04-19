@@ -13,10 +13,12 @@ this package.
    :maxdepth: 2
 
    api.rst
+   glossary.rst
 
 Index and Glossary
 ==================
 
 * :ref:`glossary`
 * :ref:`genindex`
+* :ref:`modindex`
 * :ref:`search`

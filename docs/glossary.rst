@@ -13,7 +13,7 @@ Glossary
      for use during translation.  Translation strings are usually
      created by hand within software, but are sometimes created on the
      behalf of the system for automatic template translation.  For
-     more information, see :ref:`i18n_chapter`.
+     more information, see :ref:`internatl_module`.
 
    Translation String Factory
      A factory for generating :term:`translation string` objects which
@@ -26,4 +26,14 @@ Glossary
      "programming-languages" than would be if the translation domain
      was "coffee".  Every :term:`translation string` has an associated
      translation domain.
+
+   Message Identifier
+     An unchanging string that is the identifier for a particular
+     translation string.  For example, you may have a translation
+     string which has the ``text`` "the fox jumps over the lazy dog",
+     but you might give this translation string a message identifier
+     of ``foxdog`` to reduce the chances of minor spelling or wording
+     changes breaking your translations.  The message identifier of a
+     :term:`translation string` is represented as its ``msgid``
+     argument.
 
