@@ -170,14 +170,12 @@ def Translator(translations=None, policy=None):
         return translated
     return translator
 
-def ungettext_policy(translations, singular, plural, n):
+def ungettext_policy(translations, singular, plural, n, domain):
     return translations.ungettext(singular, plural, n)
 
-def dungettext_policy(translations, singular, plural, n):
+def dungettext_policy(translations, singular, plural, n, domain):
     default_domain = getattr(translations, 'domain', None) or 'messages'
-    singular_domain = getattr(singular, 'domain', None)
-    plural_domain = getattr(plural, 'domain', None)
-    domain = (singular_domain or plural_domain) or default_domain
+    domain = domain or default_domain
     return translations.dungettext(domain, singular, plural, n)
 
 def Pluralizer(translations=None, policy=None):
@@ -185,9 +183,9 @@ def Pluralizer(translations=None, policy=None):
         policy = ungettext_policy
     if translations is None:
         translations = NullTranslations()
-    def pluralizer(singular, plural, n, mapping=None):
+    def pluralizer(singular, plural, n, domain=None, mapping=None):
         """ Pluralize this object """
-        translated = unicode(policy(translations, singular, plural, n))
+        translated = unicode(policy(translations, singular, plural, n, domain))
         if translated and '$' in translated and mapping:
             return TranslationString(translated, mapping=mapping).interpolate()
         return translated

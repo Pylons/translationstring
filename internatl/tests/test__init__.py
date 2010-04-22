@@ -169,7 +169,7 @@ class TestPluralizer(unittest.TestCase):
 
     def test_translations_None_interpolation_required(self):
         inst = self._makeOne()
-        result = inst('$abc', '$abc', 1, {'abc':1})
+        result = inst('$abc', '$abc', 1, mapping={'abc':1})
         self.assertEqual(result, '1')
         
     def test_translations_None_interpolation_not_required(self):
@@ -179,7 +179,7 @@ class TestPluralizer(unittest.TestCase):
 
     def test_policy_returns_translated(self):
         translations = DummyTranslations('result')
-        def policy(translations, singular, plural, n):
+        def policy(translations, singular, plural, n, domain):
             return 'translated'
         inst = self._makeOne(translations, policy)
         tstring = DummyTranslationString('msgid')
@@ -223,9 +223,10 @@ class Test_dugettext_policy(unittest.TestCase):
         self.assertEqual(translations.asked_domain, 'exact')
 
 class Test_ungettext_policy(unittest.TestCase):
-    def _callFUT(self, translations, singular, plural, n):
+    def _callFUT(self, translations, singular, plural, n, domain=None,
+                 mapping=None):
         from internatl import ungettext_policy
-        return ungettext_policy(translations, singular, plural, n)
+        return ungettext_policy(translations, singular, plural, n, domain)
 
     def test_it(self):
         translations = DummyTranslations('result')
@@ -233,9 +234,10 @@ class Test_ungettext_policy(unittest.TestCase):
         self.assertEqual(result, 'result')
 
 class Test_dungettext_policy(unittest.TestCase):
-    def _callFUT(self, translations, singular, plural, n):
+    def _callFUT(self, translations, singular, plural, n, domain=None,
+                 mapping=None):
         from internatl import dungettext_policy
-        return dungettext_policy(translations, singular, plural, n)
+        return dungettext_policy(translations, singular, plural, n, domain)
 
     def test_it_use_default_domain(self):
         translations = DummyTranslations('result')
@@ -243,33 +245,17 @@ class Test_dungettext_policy(unittest.TestCase):
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'messages')
 
-    def test_it_use_singular_domain(self):
-        translations = DummyTranslations('result')
-        singular = DummyTranslationString('singular', domain='singular')
-        result = self._callFUT(translations, singular, 'plural', 1)
-        self.assertEqual(result, 'result')
-        self.assertEqual(translations.asked_domain, 'singular')
-
-    def test_it_use_plural_domain(self):
-        translations = DummyTranslations('result')
-        plural = DummyTranslationString('plural', domain='plural')
-        result = self._callFUT(translations, 'singular', plural, 1)
-        self.assertEqual(result, 'result')
-        self.assertEqual(translations.asked_domain, 'plural')
-
-    def test_it_use_singular_and_plural_domains(self):
-        translations = DummyTranslations('result')
-        singular = DummyTranslationString('singular', domain='singular')
-        plural = DummyTranslationString('plural', domain='plural')
-        result = self._callFUT(translations, singular, plural, 1)
-        self.assertEqual(result, 'result')
-        self.assertEqual(translations.asked_domain, 'singular')
-
     def test_it_use_translation_domain(self):
         translations = DummyTranslations('result', domain='translation')
-        result = self._callFUT(translations, 'singular', 'plural', 1)
+        result = self._callFUT(translations, 'singular', 'plural', 1, None)
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'translation')
+
+    def test_it_use_passed_domain(self):
+        translations = DummyTranslations('result', domain='translation')
+        result = self._callFUT(translations, 'singular', 'plural', 1, 'domain')
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'domain')
 
 class DummyTranslations(object):
     def __init__(self, result, domain=None):

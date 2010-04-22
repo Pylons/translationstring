@@ -1,16 +1,19 @@
 import unittest
 
-class IntegrationTests(unittest.TestCase):
-    def test_translator_ugettext_policy(self):
+class TranslatorIntegrationTests(unittest.TestCase):
+    def _makeTranslations(self):
         import os
         here = os.path.abspath(os.path.dirname(__file__))
         localedir = os.path.join(here, 'fixtures', 'locales')
-        from gettext import translation
+        from babel.support import Translations
+        return Translations.load(localedir, locales=['de'])
+        
+    def test_translator_ugettext_policy(self):
+        translations = self._makeTranslations()
         from internatl import Translator
         from internatl import ugettext_policy
         from internatl import TranslationString
 
-        translations = translation('messages', localedir, languages=['de'])
         translator = Translator(translations, ugettext_policy)
 
         tstring = TranslationString(
@@ -20,15 +23,11 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(result, 'Eine kommagetrennte Liste von Benutzernamen.')
         
     def test_translator_dugettext_policy(self):
-        import os
-        here = os.path.abspath(os.path.dirname(__file__))
-        localedir = os.path.join(here, 'fixtures', 'locales')
-        from babel.support import Translations
+        translations = self._makeTranslations()
         from internatl import Translator
         from internatl import dugettext_policy
         from internatl import TranslationString
 
-        translations = Translations.load(localedir, locales=['de'])
         translator = Translator(translations, dugettext_policy)
 
         tstring = TranslationString(
@@ -38,15 +37,11 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(result, 'Eine kommagetrennte Liste von Benutzernamen.')
         
     def test_translator_with_interpolation(self):
-        import os
-        here = os.path.abspath(os.path.dirname(__file__))
-        localedir = os.path.join(here, 'fixtures', 'locales')
-        from babel.support import Translations
+        translations = self._makeTranslations()
         from internatl import Translator
         from internatl import dugettext_policy
         from internatl import TranslationString
 
-        translations = Translations.load(localedir, locales=['de'])
         translator = Translator(translations, dugettext_policy)
 
         tstring = TranslationString('Visit ${url}', mapping={'url':'url'})
@@ -54,3 +49,39 @@ class IntegrationTests(unittest.TestCase):
         result = translator(tstring)
         self.assertEqual(result, 'Besuchen url')
         
+class PluralizerIntegrationTests(unittest.TestCase):
+    def _makeTranslations(self):
+        import os
+        here = os.path.abspath(os.path.dirname(__file__))
+        localedir = os.path.join(here, 'fixtures', 'locales')
+        from babel.support import Translations
+        return Translations.load(localedir, locales=['de'])
+        
+    def test_pluralizer_ungettext_policy(self):
+        translations = self._makeTranslations()
+        from internatl import Pluralizer
+        from internatl import ungettext_policy
+
+        pluralizer = Pluralizer(translations, ungettext_policy)
+
+        result = pluralizer('Unable to find user: ${users}',
+                            'Unable to find users: ${users}',
+                            1,
+                            mapping={'users':'users'})
+        self.assertEqual(result,
+                         "Benutzer konnte nicht gefunden werden: users")
+
+    def test_pluralizer_dungettext_policy(self):
+        translations = self._makeTranslations()
+        from internatl import Pluralizer
+        from internatl import dungettext_policy
+
+        pluralizer = Pluralizer(translations, dungettext_policy)
+
+        result = pluralizer('Unable to find user: ${users}',
+                            'Unable to find users: ${users}',
+                            1,
+                            domain='messages',
+                            mapping={'users':'users'})
+        self.assertEqual(result,
+                         "Benutzer konnte nicht gefunden werden: users")
