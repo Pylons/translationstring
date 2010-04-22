@@ -77,39 +77,6 @@ class TestTranslationString(unittest.TestCase):
         result = inst.interpolate('That is ${name}')
         self.assertEqual(result, u'That is Zope')
 
-    def test_ugettext_translations_None_interpolation_required(self):
-        mapping = {"name": "Zope", "version": 3}
-        inst = self._makeOne(u"This is ${name}", mapping = mapping)
-        result = inst.ugettext()
-        self.assertEqual(result, u'This is Zope')
-        
-    def test_ugettext_translations_None_interpolation_not_required(self):
-        inst = self._makeOne(u"This is ${name}")
-        result = inst.ugettext()
-        self.assertEqual(result, u'This is ${name}')
-
-    def test_ugettext_translations_returns_msgid(self):
-        mapping = {"name": "Zope", "version": 3}
-        inst = self._makeOne(u"This is ${name}", default='another ${name}',
-                             mapping=mapping)
-        class Translations(object):
-            def ugettext(self, msg):
-                return msg
-        translations = Translations()
-        result = inst.ugettext(translations)
-        self.assertEqual(result, 'another Zope')
-
-    def test_ugettext_translations_returns_translation(self):
-        mapping = {"name": "Zope", "version": 3}
-        inst = self._makeOne(u"This is ${name}", default='another ${name}',
-                             mapping=mapping)
-        class Translations(object):
-            def ugettext(self, msg):
-                return 'Woo hoo ${name}'
-        translations = Translations()
-        result = inst.ugettext(translations)
-        self.assertEqual(result, 'Woo hoo Zope')
-
 class TestTranslationStringFactory(unittest.TestCase):
     def _makeOne(self, domain):
         from internatl import TranslationStringFactory
@@ -135,7 +102,7 @@ class TestChameleonTranslate(unittest.TestCase):
         self.assertEqual(result, None)
 
     def test_msgid_translationstring_translator_is_None(self):
-        msgid = DummyTranslationString()
+        msgid = DummyTranslationString('abc')
         translate = self._makeOne(None)
         result = translate(msgid)
         self.assertEqual(result, 'interpolated')
@@ -163,22 +130,97 @@ class TestChameleonTranslate(unittest.TestCase):
         self.assertEqual(result, msgid)
 
 class TestTranslator(unittest.TestCase):
-    def _makeOne(self, translations):
+    def _makeOne(self, translations=None, policy=None):
         from internatl import Translator
-        return Translator(translations)
+        return Translator(translations, policy)
+
+    def test_translations_None_interpolation_required(self):
+        inst = self._makeOne()
+        tstring = DummyTranslationString('abc', mapping=True)
+        result = inst(tstring)
+        self.assertEqual(result, 'interpolated')
+        
+    def test_translations_None_interpolation_not_required(self):
+        inst = self._makeOne()
+        tstring = DummyTranslationString('msgid', mapping=False)
+        result = inst(tstring)
+        self.assertEqual(result, 'msgid')
+
+    def test_policy_returns_msgid(self):
+        tstring = DummyTranslationString('msgid', default='default')
+        def policy(translations, msg):
+            return msg
+        inst = self._makeOne('ignoreme', policy)
+        result = inst(tstring)
+        self.assertEqual(result, 'default')
+
+    def test_policy_returns_translation(self):
+        tstring = DummyTranslationString('msgid')
+        def policy(translations, msg):
+            return 'translated'
+        inst = self._makeOne('ignoreme', policy)
+        result = inst(tstring)
+        self.assertEqual(result, 'translated')
+
+class Test_ugettext_policy(unittest.TestCase):
+    def _callFUT(self, translations, tstring):
+        from internatl import ugettext_policy
+        return ugettext_policy(translations, tstring)
 
     def test_it(self):
-        translations = 'abc'
-        translator = self._makeOne(translations)
+        translations = DummyTranslations('result')
+        result = self._callFUT(translations, 'string')
+        self.assertEqual(result, 'result')
+
+class Test_dugettext_policy(unittest.TestCase):
+    def _callFUT(self, translations, tstring):
+        from internatl import dugettext_policy
+        return dugettext_policy(translations, tstring)
+
+    def test_it_use_default_domain(self):
+        translations = DummyTranslations('result', domain=None)
         tstring = DummyTranslationString()
-        result = translator(tstring)
-        self.assertEqual(result, 'ugottext')
+        result = self._callFUT(translations, tstring)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'messages')
+
+    def test_it_use_translations_domain(self):
+        translations = DummyTranslations('result', domain='notdefault')
+        tstring = DummyTranslationString()
+        result = self._callFUT(translations, tstring)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'notdefault')
+
+    def test_it_use_tstring_domain(self):
+        translations = DummyTranslations('result', domain='notdefault')
+        tstring = DummyTranslationString(domain='exact')
+        result = self._callFUT(translations, tstring)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'exact')
+
+class DummyTranslations(object):
+    def __init__(self, result, domain=None):
+        self.result = result
+        self.domain = domain
+
+    def ugettext(self, tstring):
+        return self.result
+
+    def dugettext(self, domain, tstring):
+        self.asked_domain = domain
+        return self.result
 
 class DummyTranslationString(unicode):
-    def ugettext(self, translations):
-        self.translations = translations
-        return 'ugottext'
-    
-    def interpolate(self):
+    def __new__(cls, msgid='', domain=None, default=None, mapping=None):
+        self = unicode.__new__(cls, msgid)
+        unicode.__init__(self, msgid)
+        self.domain = domain
+        self.mapping = mapping
+        if default is None:
+            default = msgid
+        self.default = default
+        return self
+        
+    def interpolate(self, translated=None):
         return 'interpolated'
     

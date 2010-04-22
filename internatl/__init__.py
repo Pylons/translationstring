@@ -89,22 +89,6 @@ class TranslationString(unicode):
 
         return translated
 
-    def ugettext(self, translations=None):
-        """ Translate this translation string to a ``unicode`` object
-        using the ``translations`` provided.  The ``translations``
-        provided should be an object supporting the Python
-        :class:`gettext.NullTranslations` API.  If ``translations`` is
-        None, the result of interpolation of the default value is
-        returned."""
-        translated = self
-        if translations is not None:
-            translated = translations.ugettext(translated)
-        if translated == self:
-            translated = self.default
-        if self.mapping and translated:
-            translated = self.interpolate(translated)
-        return translated
-
 def TranslationStringFactory(domain):
     """ Create a factory which will generate translation strings
     without requiring that each call to the factory be passed a
@@ -144,7 +128,7 @@ def ChameleonTranslate(translator):
 
         tstring = msgid
 
-        if not hasattr(tstring, 'ugettext'):
+        if not hasattr(tstring, 'interpolate'):
             tstring = TranslationString(msgid, domain, default, mapping)
 
         if translator is None:
@@ -156,9 +140,32 @@ def ChameleonTranslate(translator):
 
     return translate
 
-def Translator(translations):
+def ugettext_policy(translations, tstring):
+    return translations.ugettext(tstring)
+
+def dugettext_policy(translations, tstring):
+    default_domain = getattr(translations, 'domain', None) or 'messages'
+    domain = tstring.domain or default_domain
+    return translations.dugettext(domain, tstring)
+
+def Translator(translations=None, policy=None):
+    if policy is None:
+        policy = ugettext_policy
     def translator(tstring):
-        return tstring.ugettext(translations)
+        """ Translate this translation string to a ``unicode`` object
+        using the ``translations`` provided.  The ``translations``
+        provided should be an object supporting the Python
+        :class:`gettext.NullTranslations` API.  If ``translations`` is
+        None, the result of interpolation of the default value is
+        returned."""
+        translated = tstring
+        if translations is not None:
+            translated = policy(translations, tstring)
+        if translated == tstring:
+            translated = tstring.default
+        if tstring.mapping and translated:
+            translated = tstring.interpolate(translated)
+        return translated
     return translator
 
 
