@@ -154,7 +154,7 @@ def dugettext_policy(translations, tstring):
 
 def Translator(translations=None, policy=None):
     if policy is None:
-        policy = ugettext_policy
+        policy = dugettext_policy
     def translator(tstring):
         """ Translate this translation string to a ``unicode`` object
         using the ``translations`` provided.  The ``translations``
@@ -184,7 +184,7 @@ def dungettext_policy(translations, singular, plural, n, domain):
 
 def Pluralizer(translations=None, policy=None):
     if policy is None:
-        policy = ungettext_policy
+        policy = dungettext_policy
     if translations is None:
         translations = NullTranslations()
     def pluralizer(singular, plural, n, domain=None, mapping=None):

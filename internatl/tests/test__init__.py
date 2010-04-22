@@ -222,13 +222,6 @@ class Test_dugettext_policy(unittest.TestCase):
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'exact')
 
-    def test_it_use_tstring_domain(self):
-        translations = DummyTranslations('result', domain='notdefault')
-        tstring = DummyTranslationString(domain='exact')
-        result = self._callFUT(translations, tstring)
-        self.assertEqual(result, 'result')
-        self.assertEqual(translations.asked_domain, 'exact')
-
     def test_it_translations_has_no_dugettext(self):
         translations = DummyTranslations('result', domain='foo')
         tstring = DummyTranslationString('abc')
