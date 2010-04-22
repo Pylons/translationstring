@@ -148,7 +148,9 @@ def ugettext_policy(translations, tstring):
 def dugettext_policy(translations, tstring):
     default_domain = getattr(translations, 'domain', None) or 'messages'
     domain = tstring.domain or default_domain
-    return translations.dugettext(domain, tstring)
+    if getattr(translations, 'dugettext', None) is not None:
+        return translations.dugettext(domain, tstring)
+    return translations.ugettext(tstring)
 
 def Translator(translations=None, policy=None):
     if policy is None:
@@ -176,7 +178,9 @@ def ungettext_policy(translations, singular, plural, n, domain):
 def dungettext_policy(translations, singular, plural, n, domain):
     default_domain = getattr(translations, 'domain', None) or 'messages'
     domain = domain or default_domain
-    return translations.dungettext(domain, singular, plural, n)
+    if getattr(translations, 'dungettext', None) is not None:
+        return translations.dungettext(domain, singular, plural, n)
+    return translations.ungettext(singular, plural, n)
 
 def Pluralizer(translations=None, policy=None):
     if policy is None:

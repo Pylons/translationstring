@@ -222,6 +222,20 @@ class Test_dugettext_policy(unittest.TestCase):
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'exact')
 
+    def test_it_use_tstring_domain(self):
+        translations = DummyTranslations('result', domain='notdefault')
+        tstring = DummyTranslationString(domain='exact')
+        result = self._callFUT(translations, tstring)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'exact')
+
+    def test_it_translations_has_no_dugettext(self):
+        translations = DummyTranslations('result', domain='foo')
+        tstring = DummyTranslationString('abc')
+        translations.dugettext = None
+        result = self._callFUT(translations, tstring)
+        self.assertEqual(result, 'result')
+
 class Test_ungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,
                  mapping=None):
@@ -256,6 +270,12 @@ class Test_dungettext_policy(unittest.TestCase):
         result = self._callFUT(translations, 'singular', 'plural', 1, 'domain')
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'domain')
+
+    def test_it_translations_has_no_dungettext(self):
+        translations = DummyTranslations('result', domain='translation')
+        translations.dungettext = None
+        result = self._callFUT(translations, 'singular', 'plural', 1, 'domain')
+        self.assertEqual(result, 'result')
 
 class DummyTranslations(object):
     def __init__(self, result, domain=None):
