@@ -169,15 +169,22 @@ class TestPluralizer(unittest.TestCase):
 
     def test_translations_None_interpolation_required(self):
         inst = self._makeOne()
-        tstring = DummyTranslationString('$abc')
-        result = inst(tstring, tstring, 1, {'abc':1})
+        result = inst('$abc', '$abc', 1, {'abc':1})
         self.assertEqual(result, '1')
         
     def test_translations_None_interpolation_not_required(self):
         inst = self._makeOne()
+        result = inst('msgid', 'msgid', 1)
+        self.assertEqual(result, 'msgid')
+
+    def test_policy_returns_translated(self):
+        translations = DummyTranslations('result')
+        def policy(translations, singular, plural, n):
+            return 'translated'
+        inst = self._makeOne(translations, policy)
         tstring = DummyTranslationString('msgid')
         result = inst(tstring, tstring, 1)
-        self.assertEqual(result, 'msgid')
+        self.assertEqual(result, 'translated')
 
 class Test_ugettext_policy(unittest.TestCase):
     def _callFUT(self, translations, tstring):
