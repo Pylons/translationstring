@@ -40,7 +40,7 @@ setup(name='internatl',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      tests_require = requires,
+      tests_require = requires + ['Babel'],
       install_requires = requires,
       test_suite="internatl",
       )

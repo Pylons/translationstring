@@ -1,5 +1,7 @@
 import re
 
+from gettext import NullTranslations
+
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
@@ -163,9 +165,30 @@ def Translator(translations=None, policy=None):
             translated = policy(translations, tstring)
         if translated == tstring:
             translated = tstring.default
-        if tstring.mapping and translated:
+        if translated and '$' in translated and tstring.mapping:
             translated = tstring.interpolate(translated)
         return translated
     return translator
 
+def ungettext_policy(translations, singular, plural, n):
+    return translations.ungettext(singular, plural, n)
 
+def dungettext_policy(translations, singular, plural, n):
+    default_domain = getattr(translations, 'domain', None) or 'messages'
+    singular_domain = getattr(singular, 'domain', None)
+    plural_domain = getattr(plural, 'domain', None)
+    domain = (singular_domain or plural_domain) or default_domain
+    return translations.dungettext(domain, singular, plural, n)
+
+def Pluralizer(translations=None, policy=None):
+    if policy is None:
+        policy = ungettext_policy
+    if translations is None:
+        translations = NullTranslations()
+    def pluralizer(singular, plural, n, mapping=None):
+        """ Pluralize this object """
+        translated = unicode(policy(translations, singular, plural, n))
+        if translated and '$' in translated and mapping:
+            return TranslationString(translated, mapping=mapping).interpolate()
+        return translated
+    return pluralizer

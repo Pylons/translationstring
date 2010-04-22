@@ -136,7 +136,7 @@ class TestTranslator(unittest.TestCase):
 
     def test_translations_None_interpolation_required(self):
         inst = self._makeOne()
-        tstring = DummyTranslationString('abc', mapping=True)
+        tstring = DummyTranslationString('$abc', mapping=True)
         result = inst(tstring)
         self.assertEqual(result, 'interpolated')
         
@@ -161,6 +161,23 @@ class TestTranslator(unittest.TestCase):
         inst = self._makeOne('ignoreme', policy)
         result = inst(tstring)
         self.assertEqual(result, 'translated')
+
+class TestPluralizer(unittest.TestCase):
+    def _makeOne(self, translations=None, policy=None):
+        from internatl import Pluralizer
+        return Pluralizer(translations, policy)
+
+    def test_translations_None_interpolation_required(self):
+        inst = self._makeOne()
+        tstring = DummyTranslationString('$abc')
+        result = inst(tstring, tstring, 1, {'abc':1})
+        self.assertEqual(result, '1')
+        
+    def test_translations_None_interpolation_not_required(self):
+        inst = self._makeOne()
+        tstring = DummyTranslationString('msgid')
+        result = inst(tstring, tstring, 1)
+        self.assertEqual(result, 'msgid')
 
 class Test_ugettext_policy(unittest.TestCase):
     def _callFUT(self, translations, tstring):
@@ -198,6 +215,55 @@ class Test_dugettext_policy(unittest.TestCase):
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'exact')
 
+class Test_ungettext_policy(unittest.TestCase):
+    def _callFUT(self, translations, singular, plural, n):
+        from internatl import ungettext_policy
+        return ungettext_policy(translations, singular, plural, n)
+
+    def test_it(self):
+        translations = DummyTranslations('result')
+        result = self._callFUT(translations, 'singular', 'plural', 1)
+        self.assertEqual(result, 'result')
+
+class Test_dungettext_policy(unittest.TestCase):
+    def _callFUT(self, translations, singular, plural, n):
+        from internatl import dungettext_policy
+        return dungettext_policy(translations, singular, plural, n)
+
+    def test_it_use_default_domain(self):
+        translations = DummyTranslations('result')
+        result = self._callFUT(translations, 'singular', 'plural', 1)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'messages')
+
+    def test_it_use_singular_domain(self):
+        translations = DummyTranslations('result')
+        singular = DummyTranslationString('singular', domain='singular')
+        result = self._callFUT(translations, singular, 'plural', 1)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'singular')
+
+    def test_it_use_plural_domain(self):
+        translations = DummyTranslations('result')
+        plural = DummyTranslationString('plural', domain='plural')
+        result = self._callFUT(translations, 'singular', plural, 1)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'plural')
+
+    def test_it_use_singular_and_plural_domains(self):
+        translations = DummyTranslations('result')
+        singular = DummyTranslationString('singular', domain='singular')
+        plural = DummyTranslationString('plural', domain='plural')
+        result = self._callFUT(translations, singular, plural, 1)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'singular')
+
+    def test_it_use_translation_domain(self):
+        translations = DummyTranslations('result', domain='translation')
+        result = self._callFUT(translations, 'singular', 'plural', 1)
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'translation')
+
 class DummyTranslations(object):
     def __init__(self, result, domain=None):
         self.result = result
@@ -207,6 +273,13 @@ class DummyTranslations(object):
         return self.result
 
     def dugettext(self, domain, tstring):
+        self.asked_domain = domain
+        return self.result
+
+    def ungettext(self, singular, plural, n):
+        return self.result
+
+    def dungettext(self, domain, singular, plural, n):
         self.asked_domain = domain
         return self.result
 
