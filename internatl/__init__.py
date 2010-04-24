@@ -59,9 +59,9 @@ class TranslationString(unicode):
     def __new__(self, msgid, domain=None, default=None, mapping=None):
         self = unicode.__new__(self, msgid)
         if isinstance(msgid, self.__class__):
-            domain = msgid.domain and msgid.domain[:] or domain
-            default = msgid.default and msgid.default[:] or default
-            mapping = msgid.mapping and msgid.mapping.copy() or mapping
+            domain = domain or msgid.domain and msgid.domain[:]
+            default = default or msgid.default and msgid.default[:]
+            mapping = mapping or msgid.mapping and msgid.mapping.copy()
             msgid = unicode(msgid)
         self.domain = domain
         if default is None:
@@ -142,29 +142,56 @@ def ChameleonTranslate(translator):
 
     return translate
 
-def ugettext_policy(translations, tstring):
+def ugettext_policy(translations, tstring, domain):
+    """ A translator policy function which unconditionally uses the
+    ``ugettext`` API on the translations object."""
     return translations.ugettext(tstring)
 
-def dugettext_policy(translations, tstring):
-    default_domain = getattr(translations, 'domain', None) or 'messages'
-    domain = tstring.domain or default_domain
+def dugettext_policy(translations, tstring, domain):
+    """ A translator policy function which assumes the use of a
+    :class:`babel.support.Translations` translations object, which
+    supports the dugettext API; fall back to ugettext."""
+    if domain is None:
+        default_domain = getattr(translations, 'domain', None) or 'messages'
+        domain = getattr(tstring, 'domain', None) or default_domain
     if getattr(translations, 'dugettext', None) is not None:
         return translations.dugettext(domain, tstring)
     return translations.ugettext(tstring)
 
 def Translator(translations=None, policy=None):
+    """
+    Return a translator object based on the ``translations`` and
+    ``policy`` provided.  ``translations`` should be an object
+    supporting *at least* the Python :class:`gettext.NullTranslations`
+    API but ideally the :class:`babel.support.Translations` API, which
+    has support for domain lookups like dugettext.
+
+    ``policy`` should be a callable which accepts three arguments:
+    ``translations``, ``tstring`` and ``domain``.  It must perform the
+    actual translation lookup.  If ``policy`` is ``None``, the
+    :func:`internatl.dugettext_policy` policy will be used. 
+
+    The callable returned accepts three arguments: ``tstring``
+    (required), ``domain`` (optional) and ``mapping`` (optional).
+    When called, it will translate the ``tstring`` translation string
+    to a ``unicode`` object using the ``translations`` provided.  If
+    ``translations`` is ``None``, the result of interpolation of the
+    default value is returned.  The optional ``domain`` argument can
+    be used to specify or override the domain of the ``tstring``
+    (useful when ``tstring`` is a normal string rather than a
+    translation string).  The optional ``mapping`` argument can
+    specify or override the ``tstring`` interpolation mapping, useful
+    when the ``tstring`` argument is a simple string instead of a
+    translation string.
+    """
     if policy is None:
         policy = dugettext_policy
-    def translator(tstring):
-        """ Translate this translation string to a ``unicode`` object
-        using the ``translations`` provided.  The ``translations``
-        provided should be an object supporting the Python
-        :class:`gettext.NullTranslations` API.  If ``translations`` is
-        None, the result of interpolation of the default value is
-        returned."""
+    def translator(tstring, domain=None, mapping=None):
+        if not hasattr(tstring, 'interpolate'):
+            tstring = TranslationString(tstring, domain=domain, mapping=mapping)
         translated = tstring
         if translations is not None:
-            translated = policy(translations, tstring)
+            translated = policy(translations, tstring, domain)
         if translated == tstring:
             translated = tstring.default
         if translated and '$' in translated and tstring.mapping:
@@ -173,9 +200,14 @@ def Translator(translations=None, policy=None):
     return translator
 
 def ungettext_policy(translations, singular, plural, n, domain):
+    """ A pluralizer policy function which unconditionally uses the
+    ``ungettext`` API on the translations object."""
     return translations.ungettext(singular, plural, n)
 
 def dungettext_policy(translations, singular, plural, n, domain):
+    """ A pluralizer policy function which assumes the use of the
+    :class:`babel.support.Translations` class, which supports the
+    dungettext API; falls back to ungettext."""
     default_domain = getattr(translations, 'domain', None) or 'messages'
     domain = domain or default_domain
     if getattr(translations, 'dungettext', None) is not None:
@@ -183,6 +215,35 @@ def dungettext_policy(translations, singular, plural, n, domain):
     return translations.ungettext(singular, plural, n)
 
 def Pluralizer(translations=None, policy=None):
+    """
+    Return a pluralizer object based on the ``translations`` and
+    ``policy`` provided.  ``translations`` should be an object
+    supporting *at least* the Python :class:`gettext.NullTranslations`
+    API but ideally the :class:`babel.support.Translations` API, which
+    has support for domain lookups like dugettext.
+
+    ``policy`` should be a callable which accepts five arguments:
+    ``translations``, ``singular`` and ``plural``, ``n`` and
+    ``domain``.  It must perform the actual pluralization lookup.  If
+    ``policy`` is ``None``, the :func:`internatl.dungettext_policy`
+    policy will be used.
+
+    The object returned will be a callable which has the following
+    signature::
+
+        def pluralizer(singular, plural, n, domain=None, mapping=None):
+            ...
+
+    The ``singular`` and ``plural`` objects passed may be translation
+    strings or unicode strings.  ``n`` represents the number of
+    elements.  ``domain`` is the translation domain to use to do the
+    pluralization, and ``mapping`` is the interpolation mapping that
+    should be used on the result.  Note that if the objects passed are
+    translation strings, their domains and mappings are ignored.  The
+    domain and mapping arguments must be used instead.  If the ``domain`` is
+    not supplied, a default domain is used (usually ``messages``).
+    """
+
     if policy is None:
         policy = dungettext_policy
     if translations is None:

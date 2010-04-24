@@ -146,9 +146,28 @@ class TestTranslator(unittest.TestCase):
         result = inst(tstring)
         self.assertEqual(result, 'msgid')
 
+    def test_translate_normal_string_with_domain(self):
+        translations = DummyTranslations('yo')
+        inst = self._makeOne(translations)
+        result = inst('abc', 'domain')
+        self.assertEqual(result, 'yo')
+        self.assertEqual(translations.asked_domain, 'domain')
+
+    def test_translate_normal_string_with_no_domain(self):
+        translations = DummyTranslations('yo')
+        inst = self._makeOne(translations)
+        result = inst('abc')
+        self.assertEqual(result, 'yo')
+        self.assertEqual(translations.asked_domain, 'messages')
+
+    def test_translate_normal_string_with_mapping(self):
+        inst = self._makeOne(None)
+        result = inst('${a}', mapping={'a':1})
+        self.assertEqual(result, '1')
+
     def test_policy_returns_msgid(self):
         tstring = DummyTranslationString('msgid', default='default')
-        def policy(translations, msg):
+        def policy(translations, msg, domain):
             return msg
         inst = self._makeOne('ignoreme', policy)
         result = inst(tstring)
@@ -156,7 +175,7 @@ class TestTranslator(unittest.TestCase):
 
     def test_policy_returns_translation(self):
         tstring = DummyTranslationString('msgid')
-        def policy(translations, msg):
+        def policy(translations, msg, domain):
             return 'translated'
         inst = self._makeOne('ignoreme', policy)
         result = inst(tstring)
@@ -187,46 +206,53 @@ class TestPluralizer(unittest.TestCase):
         self.assertEqual(result, 'translated')
 
 class Test_ugettext_policy(unittest.TestCase):
-    def _callFUT(self, translations, tstring):
+    def _callFUT(self, translations, tstring, domain):
         from internatl import ugettext_policy
-        return ugettext_policy(translations, tstring)
+        return ugettext_policy(translations, tstring, domain)
 
     def test_it(self):
         translations = DummyTranslations('result')
-        result = self._callFUT(translations, 'string')
+        result = self._callFUT(translations, 'string', None)
         self.assertEqual(result, 'result')
 
 class Test_dugettext_policy(unittest.TestCase):
-    def _callFUT(self, translations, tstring):
+    def _callFUT(self, translations, tstring, domain):
         from internatl import dugettext_policy
-        return dugettext_policy(translations, tstring)
+        return dugettext_policy(translations, tstring, domain)
 
     def test_it_use_default_domain(self):
         translations = DummyTranslations('result', domain=None)
         tstring = DummyTranslationString()
-        result = self._callFUT(translations, tstring)
+        result = self._callFUT(translations, tstring, None)
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'messages')
 
     def test_it_use_translations_domain(self):
         translations = DummyTranslations('result', domain='notdefault')
         tstring = DummyTranslationString()
-        result = self._callFUT(translations, tstring)
+        result = self._callFUT(translations, tstring, None)
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'notdefault')
 
     def test_it_use_tstring_domain(self):
         translations = DummyTranslations('result', domain='notdefault')
         tstring = DummyTranslationString(domain='exact')
-        result = self._callFUT(translations, tstring)
+        result = self._callFUT(translations, tstring, None)
         self.assertEqual(result, 'result')
         self.assertEqual(translations.asked_domain, 'exact')
+
+    def test_it_use_explicit_domain(self):
+        translations = DummyTranslations('result')
+        tstring = DummyTranslationString()
+        result = self._callFUT(translations, tstring, 'yo')
+        self.assertEqual(result, 'result')
+        self.assertEqual(translations.asked_domain, 'yo')
 
     def test_it_translations_has_no_dugettext(self):
         translations = DummyTranslations('result', domain='foo')
         tstring = DummyTranslationString('abc')
         translations.dugettext = None
-        result = self._callFUT(translations, tstring)
+        result = self._callFUT(translations, tstring, None)
         self.assertEqual(result, 'result')
 
 class Test_ungettext_policy(unittest.TestCase):

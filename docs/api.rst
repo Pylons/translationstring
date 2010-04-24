@@ -8,12 +8,20 @@ API Documentation
   .. autoclass:: TranslationString
      :members:
  
-  .. autoclass:: TranslationStringFactory
-     :members: __call__
+  .. autofunction:: TranslationStringFactory
 
-  .. autoclass:: ChameleonTranslate
+  .. autofunction:: ChameleonTranslate
      :members:
 
-  .. autofunction:: interpolate
+  .. autofunction:: Translator
 
+  .. autofunction:: dugettext_policy
+
+  .. autofunction:: ugettext_policy
+
+  .. autofunction:: Pluralizer
+
+  .. autofunction:: dungettext_policy
+
+  .. autofunction:: ungettext_policy
 
