@@ -1,5 +1,5 @@
-Internatl
-=========
+translationstring
+=================
 
 A library used by various `Repoze <http://repoze.org>`_ packages for
 internationalization (i18n) duties.
