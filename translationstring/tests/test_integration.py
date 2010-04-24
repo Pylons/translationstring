@@ -10,9 +10,9 @@ class TranslatorIntegrationTests(unittest.TestCase):
         
     def test_translator_ugettext_policy(self):
         translations = self._makeTranslations()
-        from internatl import Translator
-        from internatl import ugettext_policy
-        from internatl import TranslationString
+        from translationstring import Translator
+        from translationstring import ugettext_policy
+        from translationstring import TranslationString
 
         translator = Translator(translations, ugettext_policy)
 
@@ -24,9 +24,9 @@ class TranslatorIntegrationTests(unittest.TestCase):
         
     def test_translator_dugettext_policy(self):
         translations = self._makeTranslations()
-        from internatl import Translator
-        from internatl import dugettext_policy
-        from internatl import TranslationString
+        from translationstring import Translator
+        from translationstring import dugettext_policy
+        from translationstring import TranslationString
 
         translator = Translator(translations, dugettext_policy)
 
@@ -38,9 +38,9 @@ class TranslatorIntegrationTests(unittest.TestCase):
         
     def test_translator_with_interpolation(self):
         translations = self._makeTranslations()
-        from internatl import Translator
-        from internatl import dugettext_policy
-        from internatl import TranslationString
+        from translationstring import Translator
+        from translationstring import dugettext_policy
+        from translationstring import TranslationString
 
         translator = Translator(translations, dugettext_policy)
 
@@ -59,8 +59,8 @@ class PluralizerIntegrationTests(unittest.TestCase):
         
     def test_pluralizer_ungettext_policy(self):
         translations = self._makeTranslations()
-        from internatl import Pluralizer
-        from internatl import ungettext_policy
+        from translationstring import Pluralizer
+        from translationstring import ungettext_policy
 
         pluralizer = Pluralizer(translations, ungettext_policy)
 
@@ -73,8 +73,8 @@ class PluralizerIntegrationTests(unittest.TestCase):
 
     def test_pluralizer_dungettext_policy(self):
         translations = self._makeTranslations()
-        from internatl import Pluralizer
-        from internatl import dungettext_policy
+        from translationstring import Pluralizer
+        from translationstring import dungettext_policy
 
         pluralizer = Pluralizer(translations, dungettext_policy)
 

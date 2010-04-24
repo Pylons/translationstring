@@ -1,5 +1,5 @@
-internatl
-=========
+translationstring
+=================
 
 0.0 (unreleased)
 ----------------

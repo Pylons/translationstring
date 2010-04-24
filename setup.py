@@ -9,7 +9,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = []
 
-setup(name='internatl',
+setup(name='translationstring',
       version='0.1',
       description=('Utility library for i18n relied on by various Repoze '
                    'packages'),
@@ -30,6 +30,6 @@ setup(name='internatl',
       zip_safe=False,
       tests_require = requires + ['Babel'],
       install_requires = requires,
-      test_suite="internatl",
+      test_suite="translationstring",
       )
 

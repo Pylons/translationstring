@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# internatl documentation build configuration file
+# translationstring documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its containing
 # dir.
@@ -48,7 +48,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'internatl'
+project = 'translationstring'
 copyright = '2010, Repoze Developers <repoze-dev@lists.repoze.org>'
 
 # The default replacements for |version| and |release|, also used in various
@@ -159,7 +159,7 @@ html_last_updated_fmt = '%b %d, %Y'
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'internatldoc'
+htmlhelp_basename = 'translationstringdoc'
 
 
 # Options for LaTeX output
@@ -175,7 +175,7 @@ htmlhelp_basename = 'internatldoc'
 # (source start file, target name, title,
 #  author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'internatl.tex', 'internatl Documentation',
+  ('index', 'translationstring.tex', 'translationstring Documentation',
    'Repoze Developers', 'manual'),
 ]
 

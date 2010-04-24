@@ -1,7 +1,7 @@
 Pluralization
 =============
 
-:func:`internatl.Pluralizer` provides a gettext "plural forms"
+:func:`translationstring.Pluralizer` provides a gettext "plural forms"
 pluralization service.
 
 It is called like so:
@@ -10,7 +10,7 @@ It is called like so:
    :linenos:
 
    import gettext
-   from internatl import Pluralizer
+   from translationstring import Pluralizer
    translations = gettext.translations(.. the right arguments ...)
    pluralizer = Pluralizer(translations)
 
@@ -45,10 +45,10 @@ singular form, translated, as necessary.
 If ``translations`` is ``None``, a :class:`gettext.NullTranslations`
 object is created for the pluralizer to use.
 
-The :func:`internatl.Pluralizer` function accepts an additional
-optional argument named ``policy``.  ``policy`` should be a callable
-which accepts five arguments: ``translations``, ``singular`` and
-``plural``, ``n`` and ``domain``.  It must perform the actual
+The :func:`translationstring.Pluralizer` function accepts an
+additional optional argument named ``policy``.  ``policy`` should be a
+callable which accepts five arguments: ``translations``, ``singular``
+and ``plural``, ``n`` and ``domain``.  It must perform the actual
 pluralization lookup.  If ``policy`` is ``None``, the
-:func:`internatl.dungettext_policy` policy will be used.
+:func:`translationstring.dungettext_policy` policy will be used.
 

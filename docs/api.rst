@@ -1,9 +1,9 @@
-.. _internatl_module:
+.. _translationstring_module:
 
 API Documentation
 -----------------
 
-.. automodule:: internatl
+.. automodule:: translationstring
 
   .. autoclass:: TranslationString
      :members:

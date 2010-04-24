@@ -2,7 +2,7 @@ import unittest
 
 class TestTranslationString(unittest.TestCase):
     def _makeOne(self, msgid, **kw):
-        from internatl import TranslationString
+        from translationstring import TranslationString
         return TranslationString(msgid, **kw)
 
     def test_is_unicode_subclass(self):
@@ -79,7 +79,7 @@ class TestTranslationString(unittest.TestCase):
 
 class TestTranslationStringFactory(unittest.TestCase):
     def _makeOne(self, domain):
-        from internatl import TranslationStringFactory
+        from translationstring import TranslationStringFactory
         return TranslationStringFactory(domain)
 
     def test_allargs(self):
@@ -93,7 +93,7 @@ class TestTranslationStringFactory(unittest.TestCase):
 
 class TestChameleonTranslate(unittest.TestCase):
     def _makeOne(self, translator):
-        from internatl import ChameleonTranslate
+        from translationstring import ChameleonTranslate
         return ChameleonTranslate(translator)
 
     def test_msgid_nonstring(self):
@@ -131,7 +131,7 @@ class TestChameleonTranslate(unittest.TestCase):
 
 class TestTranslator(unittest.TestCase):
     def _makeOne(self, translations=None, policy=None):
-        from internatl import Translator
+        from translationstring import Translator
         return Translator(translations, policy)
 
     def test_translations_None_interpolation_required(self):
@@ -183,7 +183,7 @@ class TestTranslator(unittest.TestCase):
 
 class TestPluralizer(unittest.TestCase):
     def _makeOne(self, translations=None, policy=None):
-        from internatl import Pluralizer
+        from translationstring import Pluralizer
         return Pluralizer(translations, policy)
 
     def test_translations_None_interpolation_required(self):
@@ -207,7 +207,7 @@ class TestPluralizer(unittest.TestCase):
 
 class Test_ugettext_policy(unittest.TestCase):
     def _callFUT(self, translations, tstring, domain):
-        from internatl import ugettext_policy
+        from translationstring import ugettext_policy
         return ugettext_policy(translations, tstring, domain)
 
     def test_it(self):
@@ -217,7 +217,7 @@ class Test_ugettext_policy(unittest.TestCase):
 
 class Test_dugettext_policy(unittest.TestCase):
     def _callFUT(self, translations, tstring, domain):
-        from internatl import dugettext_policy
+        from translationstring import dugettext_policy
         return dugettext_policy(translations, tstring, domain)
 
     def test_it_use_default_domain(self):
@@ -258,7 +258,7 @@ class Test_dugettext_policy(unittest.TestCase):
 class Test_ungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,
                  mapping=None):
-        from internatl import ungettext_policy
+        from translationstring import ungettext_policy
         return ungettext_policy(translations, singular, plural, n, domain)
 
     def test_it(self):
@@ -269,7 +269,7 @@ class Test_ungettext_policy(unittest.TestCase):
 class Test_dungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,
                  mapping=None):
-        from internatl import dungettext_policy
+        from translationstring import dungettext_policy
         return dungettext_policy(translations, singular, plural, n, domain)
 
     def test_it_use_default_domain(self):

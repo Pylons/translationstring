@@ -3,8 +3,8 @@
 Translation
 ===========
 
-:mod:`internatl` provides a function named
-:func:`internatl.Translator` which is used to create a
+:mod:`translationstring` provides a function named
+:func:`translationstring.Translator` which is used to create a
 :term:`translator` object.
 
 It is called like so:
@@ -13,7 +13,7 @@ It is called like so:
    :linenos:
 
    import gettext
-   from internatl import Translator
+   from translationstring import Translator
    translations = gettext.translations(.. the right arguments ...)
    translator = Translator(translations)
 
@@ -32,8 +32,8 @@ object provided and interpolate the result.
    :linenos:
 
    from gettext import translations
-   from internatl import Translator
-   from internatl import TranslationString
+   from translationstring import Translator
+   from translationstring import TranslationString
 
    t = translations(.. the right arguments ...)
    translator = Translator(t)
@@ -54,17 +54,17 @@ when the ``tstring`` argument is not a translation string.
    :linenos:
 
    from gettext import translations
-   from internatl import Translator
-   from internatl import TranslationString
+   from translationstring import Translator
+   from translationstring import TranslationString
 
    t = translations(.. the right arguments ...)
    translator = Translator(t)
    translator('Add ${number}', domain='foo', mapping={'number':1})
 
-The :func:`internatl.Translator` function accepts an additional
-optional argument named ``policy``.  ``policy`` should be a callable
-which accepts three arguments: ``translations``, ``tstring`` and
-``domain``.  It must perform the actual translation lookup.  If
-``policy`` is ``None``, the :func:`internatl.dugettext_policy` policy
-will be used.
+The :func:`translationstring.Translator` function accepts an
+additional optional argument named ``policy``.  ``policy`` should be a
+callable which accepts three arguments: ``translations``, ``tstring``
+and ``domain``.  It must perform the actual translation lookup.  If
+``policy`` is ``None``, the :func:`translationstring.dugettext_policy`
+policy will be used.
 

@@ -7,13 +7,14 @@ Glossary
    :sorted:
 
    Translation String
-     An instance of :class:`internatl.TranslationString`, which is a
-     class that behaves like a Unicode string, but has several extra
-     attributes such as ``domain``, ``msgid``, and ``mapping`` for use
-     during translation.  Translation strings are usually created by
-     hand within software, but are sometimes created on the behalf of
-     the system for automatic template translation.  For more
-     information, see :ref:`internatl_module`.
+     An instance of :class:`translationstring.TranslationString`,
+     which is a class that behaves like a Unicode string, but has
+     several extra attributes such as ``domain``, ``msgid``, and
+     ``mapping`` for use during translation.  Translation strings are
+     usually created by hand within software, but are sometimes
+     created on the behalf of the system for automatic template
+     translation.  For more information, see
+     :ref:`translationstring_module`.
 
    Translation String Factory
      A factory for generating :term:`translation string` objects which
@@ -47,7 +48,7 @@ Glossary
 
    Gettext
      The GNU `gettext <http://www.gnu.org/software/gettext/>`_
-     library, used by the :mod:`internatl` locale translation
+     library, used by the :mod:`translationstring` locale translation
      machinery.
 
    Translator
