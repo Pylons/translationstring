@@ -97,12 +97,12 @@ translations of the same msgid, in case they conflict.
                           domain='form')
 
 The above translation string named a domain of ``form``.  A
-:term:`translator` function will often use the domain to locate the
-right translator file on the filesystem which contains translations
-for a given domain.  In this case, if it were trying to translate to
-our msgid to German, it might try to find a translation from a
-:term:`gettext` file within a :term:`translation directory` like this
-one::
+*translator* function (see :ref:`translation_chapter`) will often use
+the domain to locate the right translator file on the filesystem which
+contains translations for a given domain.  In this case, if it were
+trying to translate to our msgid to German, it might try to find a
+translation from a :term:`gettext` file within a :term:`translation
+directory` like this one::
 
    locale/de/LC_MESSAGES/form.mo
 

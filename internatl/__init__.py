@@ -22,8 +22,8 @@ class TranslationString(unicode):
 
     ``domain`` represents the :term:`translation domain`.  By default,
     the translation domain is ``None``, indicating that this
-    translation string is associated with the :term:`default
-    translation domain`.
+    translation string is associated with the default translation
+    domain (usually ``messages``).
 
     ``default`` represents an explicit *default text* for this
     translation string.  Default text appears when the translation
@@ -40,8 +40,8 @@ class TranslationString(unicode):
 
     ``mapping``, if supplied, must be a dictionary-like object which
     represents the replacement values for any :term:`translation
-    replacement marker` instances found within the ``msgid`` (or
-    ``default``) value of this translation string.
+    string` *replacement marker* instances found within the ``msgid``
+    (or ``default``) value of this translation string.
 
     After a translation string is constructed, it behaves like most
     other ``unicode`` objects; its ``msgid`` value will be displayed

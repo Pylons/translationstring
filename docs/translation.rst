@@ -1,3 +1,5 @@
+.. _translation_chapter:
+
 Translation
 ===========
 

@@ -11,7 +11,6 @@ API Documentation
   .. autofunction:: TranslationStringFactory
 
   .. autofunction:: ChameleonTranslate
-     :members:
 
   .. autofunction:: Translator
 

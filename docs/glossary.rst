@@ -37,3 +37,28 @@ Glossary
      identifier of a :term:`translation string` is represented as its
      ``msgid`` argument.
 
+   Translation Directory
+     A translation directory is a :term:`gettext` translation
+     directory.  It contains language folders, which themselves
+     contain ``LC_MESSAGES`` folders, which contain ``.mo`` files.
+     Each ``.mo`` file represents a set of translations for a language
+     in a :term:`translation domain`.  The name of the ``.mo`` file
+     (minus the .mo extension) is the translation domain name.
+
+   Gettext
+     The GNU `gettext <http://www.gnu.org/software/gettext/>`_
+     library, used by the :mod:`internatl` locale translation
+     machinery.
+
+   Translator
+     A callable which receives a :term:`translation string` and
+     returns a translated Unicode object for the purposes of
+     internationalization.  
+
+   Babel
+     A `collection of tools <http://babel.edgewall.org/>`_ for
+     internationalizing Python applications.
+
+   Chameleon
+     `chameleon <http://chameleon.repoze.org>`_ is templating language
+     written and maintained by Malthe Borch.
