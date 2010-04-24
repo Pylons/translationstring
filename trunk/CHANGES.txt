@@ -1,0 +1,7 @@
+translationstring
+=================
+
+0.0 (unreleased)
+----------------
+
+- Initial release.
