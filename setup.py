@@ -10,7 +10,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = []
 
 setup(name='translationstring',
-      version='0.1',
+      version='0.2',
       description=('Utility library for i18n relied on by various Repoze '
                    'packages'),
       long_description=README + '\n\n' +  CHANGES,
