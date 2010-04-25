@@ -147,6 +147,11 @@ class TestChameleonTranslate(unittest.TestCase):
         result = translate(msgid)
         self.assertEqual(result, msgid)
 
+    def test_msgid_unicode_default_is_empty_string(self):
+        translate = self._makeOne(None)
+        result = translate('foo', default='')
+        self.assertEqual(result, 'foo')
+
 class TestTranslator(unittest.TestCase):
     def _makeOne(self, translations=None, policy=None):
         from translationstring import Translator

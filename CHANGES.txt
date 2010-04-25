@@ -7,6 +7,10 @@ Next release
 - Add ``__getstate__`` and ``__reduce__`` methods to translation
   string to allow for pickling.
 
+- Fix bug in ChameleonTranslate.  When ``i18n:translate`` was used in
+  templates, a translation string was inappropriately created with a
+  ``default`` value of the empty string.  Symptom: template text would
+  "disappear" rather than being returned untranslated.
 
 0.1 (04-24-2010)
 ----------------
