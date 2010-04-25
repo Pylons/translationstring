@@ -187,3 +187,7 @@ do something like this:
    ``zope.i18nmessageid.MessageFactoy`` object.  It is not a subclass,
    however.
 
+Pickleability
+-------------
+
+Translation strings may be pickled and unpickled.

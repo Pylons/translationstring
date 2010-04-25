@@ -1,9 +1,13 @@
 import unittest
 
 class TestTranslationString(unittest.TestCase):
-    def _makeOne(self, msgid, **kw):
+    def _getTargetClass(self):
         from translationstring import TranslationString
-        return TranslationString(msgid, **kw)
+        return TranslationString
+        
+    def _makeOne(self, msgid, **kw):
+        klass = self._getTargetClass()
+        return klass(msgid, **kw)
 
     def test_is_unicode_subclass(self):
         inst = self._makeOne('msgid')
@@ -76,6 +80,20 @@ class TestTranslationString(unittest.TestCase):
         inst = self._makeOne(u"This is ${name}", mapping = mapping)
         result = inst.interpolate('That is ${name}')
         self.assertEqual(result, u'That is Zope')
+
+    def test___reduce__(self):
+        klass = self._getTargetClass()
+        inst = self._makeOne('msgid', default='default', domain='domain',
+                             mapping='mapping')
+        result = inst.__reduce__()
+        self.assertEqual(result, (klass, (u'msgid', 'domain', u'default', 
+                                          'mapping')))
+
+    def test___getstate__(self):
+        inst = self._makeOne('msgid', default='default', domain='domain',
+                             mapping='mapping')
+        result = inst.__getstate__()
+        self.assertEqual(result, (u'msgid', 'domain', u'default', 'mapping'))
 
 class TestTranslationStringFactory(unittest.TestCase):
     def _makeOne(self, domain):

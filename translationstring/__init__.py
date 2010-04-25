@@ -91,6 +91,12 @@ class TranslationString(unicode):
 
         return translated
 
+    def __reduce__(self):
+        return self.__class__, self.__getstate__()
+
+    def __getstate__(self):
+        return unicode(self), self.domain, self.default, self.mapping
+
 def TranslationStringFactory(domain):
     """ Create a factory which will generate translation strings
     without requiring that each call to the factory be passed a

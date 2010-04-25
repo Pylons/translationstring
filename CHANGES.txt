@@ -1,7 +1,14 @@
 translationstring
 =================
 
-0.0 (unreleased)
+Next release
+------------
+
+- Add ``__getstate__`` and ``__reduce__`` methods to translation
+  string to allow for pickling.
+
+
+0.1 (04-24-2010)
 ----------------
 
 - Initial release.
