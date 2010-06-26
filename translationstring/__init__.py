@@ -65,8 +65,8 @@ class TranslationString(unicode):
             msgid = unicode(msgid)
         self.domain = domain
         if default is None:
-            default = msgid
-        self.default = unicode(default)
+            default = unicode(msgid)
+        self.default = default
         self.mapping = mapping
         return self
 

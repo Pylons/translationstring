@@ -120,10 +120,13 @@ class TestChameleonTranslate(unittest.TestCase):
         self.assertEqual(result, None)
 
     def test_chameleon_default_marker_returned(self):
-        # Chameleon passes an empty string as marker so it can detect
-        # missing translations.
+        # Chameleon uses a special StringMarker class as default value so it
+        # can detect missing translations.
+        class StringMarker(str):
+            def __nonzero__(self):
+                return False
         translate = self._makeOne(None)
-        marker = u""
+        marker = StringMarker()
         result = translate("dummy", default=marker)
         self.failUnless(result is marker)
 
