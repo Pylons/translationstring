@@ -119,6 +119,14 @@ class TestChameleonTranslate(unittest.TestCase):
         result = translate(None)
         self.assertEqual(result, None)
 
+    def test_chameleon_default_marker_returned(self):
+        # Chameleon passes an empty string as marker so it can detect
+        # missing translations.
+        translate = self._makeOne(None)
+        marker = u""
+        result = translate("dummy", default=marker)
+        self.failUnless(result is marker)
+
     def test_msgid_translationstring_translator_is_None(self):
         msgid = DummyTranslationString('abc')
         translate = self._makeOne(None)
@@ -147,10 +155,6 @@ class TestChameleonTranslate(unittest.TestCase):
         result = translate(msgid)
         self.assertEqual(result, msgid)
 
-    def test_msgid_unicode_default_is_empty_string(self):
-        translate = self._makeOne(None)
-        result = translate('foo', default='')
-        self.assertEqual(result, 'foo')
 
 class TestTranslator(unittest.TestCase):
     def _makeOne(self, translations=None, policy=None):

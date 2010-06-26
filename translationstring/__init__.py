@@ -139,8 +139,6 @@ def ChameleonTranslate(translator):
         tstring = msgid
 
         if not hasattr(tstring, 'interpolate'):
-            if not default: # chameleon passes us u'' as default?
-                default = None
             tstring = TranslationString(msgid, domain, default, mapping)
 
         if translator is None:

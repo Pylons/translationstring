@@ -1,6 +1,14 @@
 translationstring
 =================
 
+0.3 (unreleased)
+----------------
+
+- Preserve default translations even if they are an empty string. This
+  fixes problems with Chameleon being unable to determine if a translation
+  is present or not. Will require Chameleon 1.2.6 or later; previous versions
+  pass in a str instead of unicode marker.
+
 0.2 (04-25-2010)
 ----------------
 
