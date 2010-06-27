@@ -152,7 +152,7 @@ After assigning ``_`` to the result of a
 :func:`translationstring.TranslationStringFactory`, the subsequent
 result of calling ``_`` will be a
 :class:`translationstring.TranslationString` instance.  Even though a
-``domain`` value was not passed to ``_` (as would have been necessary
+``domain`` value was not passed to ``_`` (as would have been necessary
 if the :class:`translationstring.TranslationString` constructor were
 used instead of a translation string factory), the ``domain``
 attribute of the resulting translation string will be ``bfg``.  As a
