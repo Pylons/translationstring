@@ -1,7 +1,7 @@
 translationstring
 =================
 
-0.3 (unreleased)
+0.3 (06-25-2010)
 ----------------
 
 - Preserve default translations even if they are an empty string. This
