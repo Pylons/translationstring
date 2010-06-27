@@ -122,9 +122,7 @@ class TestChameleonTranslate(unittest.TestCase):
     def test_chameleon_default_marker_returned(self):
         # Chameleon uses a special StringMarker class as default value so it
         # can detect missing translations.
-        class StringMarker(str):
-            def __nonzero__(self):
-                return False
+        class StringMarker(str): pass
         translate = self._makeOne(None)
         marker = StringMarker()
         result = translate("dummy", default=marker)
