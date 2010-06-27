@@ -57,6 +57,11 @@ class TranslationString(unicode):
     __slots__ = ('domain', 'default', 'mapping')
 
     def __new__(self, msgid, domain=None, default=None, mapping=None):
+
+        # NB: this function should never never lose the *original
+        # identity* of a non-``None`` but empty ``default`` value
+        # provided to it.  See the comment in ChameleonTranslate.
+
         self = unicode.__new__(self, msgid)
         if isinstance(msgid, self.__class__):
             domain = domain or msgid.domain and msgid.domain[:]
@@ -83,6 +88,13 @@ class TranslationString(unicode):
         """
         if translated is None:
             translated = self.default
+
+        # NB: this function should never never lose the *original
+        # identity* of a non-``None`` but empty ``default`` value it
+        # is provided.  If translated == default, it should return the
+        # *orignal* default, not a derivation.  See the comment below in
+        # ChameleonTranslate.
+
         if self.mapping and translated:
             def replace(match):
                 whole, param1, param2 = match.groups()
@@ -133,6 +145,36 @@ def ChameleonTranslate(translator):
     """
     def translate(msgid, domain=None, mapping=None, context=None,
                  target_language=None, default=None):
+
+        # NB: note that both TranslationString._init__ and
+        # TranslationString.interpolate are careful to never lose the
+        # *identity* of an empty but non-``None`` ``default`` value we
+        # provide to them.  For example, neither of those functions
+        # are permitted to run an empty but non-``None`` ``default``
+        # through ``unicode`` and throw the original default value
+        # away afterwards.
+
+        # This has a dubious cause: for Chameleon API reasons we must
+        # ensure that, after translation, if ( (translated == msgid)
+        # and (not default) and (default is not None) ) that we return
+        # the ``default`` value provided to us *unmodified*, because
+        # Chameleon uses it as a sentinel (it compares the return
+        # value of this function by identity to what it passed in as
+        # ``default``; this marker is a
+        # chameleon.core.i18n.StringMarker instance, a subclass of str
+        # that == '').  This is, of course, totally absurd, because
+        # Chameleon *also* wants us to use ``default`` as the input to
+        # a translation string in some cases, and maintaining the
+        # identity of this object through translation operations isn't
+        # a contract it spells out in its docs.
+
+        # Chameleon's use of ``default`` to represent both a sentinel
+        # and input to a translation string is a Chameleon i18n
+        # extensibility design bug.  Until we overhaul its hook point
+        # for translation extensibility, we need to appease it by
+        # preserving ``default`` in the aforementioned case.  So we
+        # spray these indignant comments all over this module. ;-)
+
         if not isinstance(msgid, basestring):
             return msgid
 
