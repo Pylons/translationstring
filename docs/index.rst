@@ -1,8 +1,8 @@
 translationstring
 =================
 
-A library used by various `Repoze <http://repoze.org>`_ packages for
-internationalization (i18n) duties.
+A library used by various `Pylons Project <http://pylonsproject.org>`_
+packages for internationalization (i18n) duties.
 
 This package provides a :term:`translation string` class, a
 :term:`translation string factory` class, translation and

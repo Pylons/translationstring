@@ -4,8 +4,13 @@ from setuptools import setup
 from setuptools import find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.txt')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+
+try:
+    README = open(os.path.join(here, 'README.txt')).read()
+    CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+except:
+    README = ''
+    CHANGES = ''
 
 requires = []
 
@@ -22,8 +27,8 @@ setup(name='translationstring',
           ],
       keywords='i18n l10n internationalization localization gettext chameleon',
       author="Chris McDonough, Agendaless Consulting",
-      author_email="repoze-dev@lists.repoze.org",
-      url="http://www.repoze.org",
+      author_email="pylons-discuss@googlegroups.com",
+      url="http://pylonsproject.org",
       license="BSD-like (http://repoze.org/license.html)",
       packages=find_packages(),
       include_package_data=True,

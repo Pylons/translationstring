@@ -1,6 +1,13 @@
 translationstring
 =================
 
+Next release
+------------
+
+- Moved to GitHub (https://github.com/Pylons/translationstring).
+
+- Added tox.ini for testing purposes.
+
 0.3 (06-25-2010)
 ----------------
 
