@@ -12,5 +12,5 @@ depend on `Babel <http://babel.edgewall.org>`_, but its translation
 and pluralization services are meant to work best when provided with
 an instance of the ``babel.support.Translations`` class.
 
-Please see http://docs.pylonsproject.org/translationstring/dev/ or the
-``docs/index.rst`` file in this package for the documentation.
+Please see http://docs.pylonsproject.org/projects/translationstring/dev/ or
+the ``docs/index.rst`` file in this package for the documentation.
