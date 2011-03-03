@@ -195,6 +195,8 @@ def ChameleonTranslate(translator):
         # spray these indignant comments all over this module. ;-)
 
         if not isinstance(msgid, string_types):
+            if msgid is not None:
+                msgid = text_type(msgid)
             return msgid
 
         tstring = msgid

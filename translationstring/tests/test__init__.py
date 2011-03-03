@@ -151,6 +151,11 @@ class TestChameleonTranslate(unittest.TestCase):
         result = translate(None)
         self.assertEqual(result, None)
 
+    def test_msgid_not_none_not_string(self):
+        translate = self._makeOne(None)
+        result = translate(True)
+        self.assertEqual(result, 'True')
+
     def test_chameleon_default_marker_returned(self):
         # Chameleon uses a special StringMarker class as default value so it
         # can detect missing translations.

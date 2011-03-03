@@ -4,10 +4,11 @@ translationstring
 Next release
 ------------
 
+- coerce non-string values to a string during translation, except for None.
+
 - Honour mapping information passed to the translator, combining it with
   mapping data already part of the translation string.
   
-
 - Support formatting of translation strings with %-operator.
 
 0.4 (09-22-2011)
