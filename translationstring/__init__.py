@@ -2,8 +2,12 @@ import re
 from six import text_type
 from six import string_types
 from six import u
+from six import PY3
 
 from gettext import NullTranslations
+
+if PY3:
+    NullTranslations.ungettext = NullTranslations.ngettext
 
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 

@@ -12,7 +12,7 @@ except:
     README = ''
     CHANGES = ''
 
-requires = []
+requires = ['six']
 
 setup(name='translationstring',
       version='0.3',
@@ -33,7 +33,7 @@ setup(name='translationstring',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      tests_require = requires + ['Babel'],
+      tests_require = requires,
       install_requires = requires,
       test_suite="translationstring",
       )
