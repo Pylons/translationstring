@@ -1,6 +1,5 @@
 import unittest
-from six import text_type
-from six import u
+import six
 
 class TestTranslationString(unittest.TestCase):
     def _getTargetClass(self):
@@ -13,7 +12,7 @@ class TestTranslationString(unittest.TestCase):
 
     def test_is_text_type_subclass(self):
         inst = self._makeOne('msgid')
-        self.failUnless(isinstance(inst, text_type))
+        self.failUnless(isinstance(inst, six.text_type))
 
     def test_msgid_is_translation_string(self):
         another = self._makeOne('msgid', domain='domain', default='default',
@@ -47,55 +46,55 @@ class TestTranslationString(unittest.TestCase):
         inst = self._makeOne('This is $name version ${version}.',
                               mapping=mapping)
         result = inst.interpolate()
-        self.assertEqual(result, u('This is Zope version 3.'))
+        self.assertEqual(result, six.u('This is Zope version 3.'))
 
     def test_interpolate_subsitution_more_than_once(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne(
-            u("This is $name version ${version}. ${name} $version!"),
+            six.u("This is $name version ${version}. ${name} $version!"),
             mapping=mapping)
         result = inst.interpolate()
-        self.assertEqual(result, u('This is Zope version 3. Zope 3!'))
+        self.assertEqual(result, six.u('This is Zope version 3. Zope 3!'))
 
     def test_interpolate_double_dollar_escape(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne('$$name', mapping=mapping)
         result = inst.interpolate()
-        self.assertEqual(result, u('$$name'))
+        self.assertEqual(result, six.u('$$name'))
 
     def test_interpolate_missing_not_interpolated(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne(
-            u("This is $name $version. $unknown $$name $${version}."),
+            six.u("This is $name $version. $unknown $$name $${version}."),
             mapping=mapping)
         result = inst.interpolate()
         self.assertEqual(result,
-                         u('This is Zope 3. $unknown $$name $${version}.'))
+                         six.u('This is Zope 3. $unknown $$name $${version}.'))
 
     def test_interpolate_missing_mapping(self):
-        inst = self._makeOne(u("This is ${name}"))
+        inst = self._makeOne(six.u("This is ${name}"))
         result = inst.interpolate()
-        self.assertEqual(result, u('This is ${name}'))
+        self.assertEqual(result, six.u('This is ${name}'))
 
     def test_interpolate_passed_translated(self):
         mapping = {"name": "Zope", "version": 3}
-        inst = self._makeOne(u("This is ${name}"), mapping = mapping)
+        inst = self._makeOne(six.u("This is ${name}"), mapping = mapping)
         result = inst.interpolate('That is ${name}')
-        self.assertEqual(result, u('That is Zope'))
+        self.assertEqual(result, six.u('That is Zope'))
 
     def test___reduce__(self):
         klass = self._getTargetClass()
         inst = self._makeOne('msgid', default='default', domain='domain',
                              mapping='mapping')
         result = inst.__reduce__()
-        self.assertEqual(result, (klass, (u('msgid'), 'domain', u('default'), 
+        self.assertEqual(result, (klass, (six.u('msgid'), 'domain', six.u('default'), 
                                           'mapping')))
 
     def test___getstate__(self):
         inst = self._makeOne('msgid', default='default', domain='domain',
                              mapping='mapping')
         result = inst.__getstate__()
-        self.assertEqual(result, (u('msgid'), 'domain', u('default'), 'mapping'))
+        self.assertEqual(result, (six.u('msgid'), 'domain', six.u('default'), 'mapping'))
 
 class TestTranslationStringFactory(unittest.TestCase):
     def _makeOne(self, domain):
@@ -137,10 +136,10 @@ class TestChameleonTranslate(unittest.TestCase):
         self.assertEqual(result, 'interpolated')
 
     def test_msgid_text_type_translator_is_None(self):
-        msgid = u('foo')
+        msgid = six.u('foo')
         translate = self._makeOne(None)
         result = translate(msgid)
-        self.assertEqual(result, u('foo'))
+        self.assertEqual(result, six.u('foo'))
 
     def test_msgid_translationstring_translator_is_not_None(self):
         msgid = DummyTranslationString()
@@ -345,10 +344,10 @@ class DummyTranslations(object):
         self.asked_domain = domain
         return self.result
 
-class DummyTranslationString(text_type):
+class DummyTranslationString(six.text_type):
     def __new__(cls, msgid='', domain=None, default=None, mapping=None):
-        self = text_type.__new__(cls, msgid)
-        text_type.__init__(self, msgid)
+        self = six.text_type.__new__(cls, msgid)
+        six.text_type.__init__(self, msgid)
         self.domain = domain
         self.mapping = mapping
         if default is None:

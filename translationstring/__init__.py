@@ -1,12 +1,8 @@
 import re
-from six import text_type
-from six import string_types
-from six import u
-from six import PY3
-
+import six
 from gettext import NullTranslations
 
-if PY3:
+if six.PY3:
     NullTranslations.ungettext = NullTranslations.ngettext
 
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
@@ -14,7 +10,7 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
-class TranslationString(text_type):
+class TranslationString(six.text_type):
     """
     The constructor for a :term:`translation string`.  A translation
     string is a Unicode-like object that has some extra metadata.
@@ -69,15 +65,15 @@ class TranslationString(text_type):
         # identity* of a non-``None`` but empty ``default`` value
         # provided to it.  See the comment in ChameleonTranslate.
 
-        self = text_type.__new__(self, msgid)
+        self = six.text_type.__new__(self, msgid)
         if isinstance(msgid, self.__class__):
             domain = domain or msgid.domain and msgid.domain[:]
             default = default or msgid.default and msgid.default[:]
             mapping = mapping or msgid.mapping and msgid.mapping.copy()
-            msgid = text_type(msgid)
+            msgid = six.text_type(msgid)
         self.domain = domain
         if default is None:
-            default = text_type(msgid)
+            default = six.text_type(msgid)
         self.default = default
         self.mapping = mapping
         return self
@@ -105,7 +101,7 @@ class TranslationString(text_type):
         if self.mapping and translated:
             def replace(match):
                 whole, param1, param2 = match.groups()
-                return text_type(self.mapping.get(param1 or param2, whole))
+                return six.text_type(self.mapping.get(param1 or param2, whole))
             translated = _interp_regex.sub(replace, translated)
 
         return translated
@@ -114,7 +110,7 @@ class TranslationString(text_type):
         return self.__class__, self.__getstate__()
 
     def __getstate__(self):
-        return text_type(self), self.domain, self.default, self.mapping
+        return six.text_type(self), self.domain, self.default, self.mapping
 
 def TranslationStringFactory(domain):
     """ Create a factory which will generate translation strings
@@ -182,7 +178,7 @@ def ChameleonTranslate(translator):
         # preserving ``default`` in the aforementioned case.  So we
         # spray these indignant comments all over this module. ;-)
 
-        if not isinstance(msgid, string_types):
+        if not isinstance(msgid, six.string_types):
             return msgid
 
         tstring = msgid
@@ -307,7 +303,7 @@ def Pluralizer(translations=None, policy=None):
         translations = NullTranslations()
     def pluralizer(singular, plural, n, domain=None, mapping=None):
         """ Pluralize this object """
-        translated = text_type(policy(translations, singular, plural, n, domain))
+        translated = six.text_type(policy(translations, singular, plural, n, domain))
         if translated and '$' in translated and mapping:
             return TranslationString(translated, mapping=mapping).interpolate()
         return translated

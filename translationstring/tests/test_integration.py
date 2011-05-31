@@ -1,6 +1,5 @@
 import gettext
 import unittest
-from translationstring.tests.translations import Translations
 
 class TranslatorIntegrationTests(unittest.TestCase):
     def _makeTranslations(self):
@@ -55,6 +54,7 @@ class PluralizerIntegrationTests(unittest.TestCase):
         import os
         here = os.path.abspath(os.path.dirname(__file__))
         localedir = os.path.join(here, 'fixtures', 'locales')
+        from babel.support import Translations
         return Translations.load(localedir, locales=['de'])
         
     def test_pluralizer_ungettext_policy(self):
