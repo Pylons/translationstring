@@ -1,10 +1,6 @@
 import gettext
 import six
 
-if six.PY3:
-    gettext.GNUTranslations.ugettext = gettext.GNUTranslations.gettext
-    gettext.GNUTranslations.ungettext = gettext.GNUTranslations.ngettext
-
 class Translations(gettext.GNUTranslations, object):
     """An extended translation catalog class."""
 
@@ -43,14 +39,20 @@ class Translations(gettext.GNUTranslations, object):
         """Like ``ugettext()``, but look the message up in the specified
         domain.
         """
-        return self._domains.get(domain, self).ugettext(message)
+        if six.PY3:
+            return self._domains.get(domain, self).gettext(message)
+        else:
+            return self._domains.get(domain, self).ugettext(message)
     
     def dungettext(self, domain, singular, plural, num):
         """Like ``ungettext()`` but look the message up in the specified
         domain.
         """
-        return self._domains.get(domain, self).ungettext(singular, plural, num)
-
+        if six.PY3:
+            return self._domains.get(domain, self).ngettext(singular, plural, num)
+        else:
+            return self._domains.get(domain, self).ungettext(singular, plural, num)
+        
     # Most of the downwards code, until it get's included in stdlib, from:
     #    http://bugs.python.org/file10036/gettext-pgettext.patch
     #    

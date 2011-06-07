@@ -2,9 +2,6 @@ import re
 import six
 from gettext import NullTranslations
 
-if six.PY3:
-    NullTranslations.ungettext = NullTranslations.ngettext
-
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
@@ -198,7 +195,11 @@ def ChameleonTranslate(translator):
 def ugettext_policy(translations, tstring, domain):
     """ A translator policy function which unconditionally uses the
     ``ugettext`` API on the translations object."""
-    return translations.ugettext(tstring)
+    
+    if six.PY3:
+        return translations.gettext(tstring)
+    else:
+        return translations.ugettext(tstring)
 
 def dugettext_policy(translations, tstring, domain):
     """ A translator policy function which assumes the use of a
@@ -209,7 +210,11 @@ def dugettext_policy(translations, tstring, domain):
         domain = getattr(tstring, 'domain', None) or default_domain
     if getattr(translations, 'dugettext', None) is not None:
         return translations.dugettext(domain, tstring)
-    return translations.ugettext(tstring)
+    
+    if six.PY3:
+        return translations.gettext(tstring)
+    else:
+        return translations.ugettext(tstring)
 
 def Translator(translations=None, policy=None):
     """
@@ -255,17 +260,26 @@ def Translator(translations=None, policy=None):
 def ungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
-    return translations.ungettext(singular, plural, n)
+    if six.PY3:
+        return translations.ngettext(singular, plural, n)
+    else:
+        return translations.ungettext(singular, plural, n)
 
 def dungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which assumes the use of the
     :class:`babel.support.Translations` class, which supports the
     dungettext API; falls back to ungettext."""
+    
     default_domain = getattr(translations, 'domain', None) or 'messages'
     domain = domain or default_domain
+    
     if getattr(translations, 'dungettext', None) is not None:
         return translations.dungettext(domain, singular, plural, n)
-    return translations.ungettext(singular, plural, n)
+    
+    if six.PY3:
+        return translations.ngettext(singular, plural, n)
+    else:
+        return translations.ungettext(singular, plural, n)
 
 def Pluralizer(translations=None, policy=None):
     """
