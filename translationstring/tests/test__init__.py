@@ -329,6 +329,12 @@ class DummyTranslations(object):
     def __init__(self, result, domain=None):
         self.result = result
         self.domain = domain
+        
+    def gettext(self, tstring):
+        return self.result
+    
+    def ngettext(self, singular, plural, n):
+        return self.result
 
     def ugettext(self, tstring):
         return self.result

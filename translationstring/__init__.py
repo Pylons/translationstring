@@ -197,9 +197,11 @@ def ugettext_policy(translations, tstring, domain):
     ``ugettext`` API on the translations object."""
     
     if six.PY3:
-        return translations.gettext(tstring)
+        _gettext = translations.gettext
     else:
-        return translations.ugettext(tstring)
+        _gettext = translations.ugettext
+    
+    return _gettext(tstring)
 
 def dugettext_policy(translations, tstring, domain):
     """ A translator policy function which assumes the use of a
@@ -212,9 +214,11 @@ def dugettext_policy(translations, tstring, domain):
         return translations.dugettext(domain, tstring)
     
     if six.PY3:
-        return translations.gettext(tstring)
+        _gettext = translations.gettext
     else:
-        return translations.ugettext(tstring)
+        _gettext = translations.ugettext
+    
+    return _gettext(tstring)
 
 def Translator(translations=None, policy=None):
     """
@@ -260,10 +264,13 @@ def Translator(translations=None, policy=None):
 def ungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
+        
     if six.PY3:
-        return translations.ngettext(singular, plural, n)
+        _gettext = translations.ngettext
     else:
-        return translations.ungettext(singular, plural, n)
+        _gettext = translations.ungettext
+    
+    return _gettext(singular, plural, n)
 
 def dungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which assumes the use of the
@@ -275,11 +282,13 @@ def dungettext_policy(translations, singular, plural, n, domain):
     
     if getattr(translations, 'dungettext', None) is not None:
         return translations.dungettext(domain, singular, plural, n)
-    
+        
     if six.PY3:
-        return translations.ngettext(singular, plural, n)
+        _gettext = translations.ngettext
     else:
-        return translations.ungettext(singular, plural, n)
+        _gettext = translations.ungettext
+    
+    return _gettext(singular, plural, n)
 
 def Pluralizer(translations=None, policy=None):
     """
