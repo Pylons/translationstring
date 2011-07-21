@@ -13,7 +13,7 @@ class TestTranslationString(unittest.TestCase):
 
     def test_is_text_type_subclass(self):
         inst = self._makeOne('msgid')
-        self.failUnless(isinstance(inst, text_type))
+        self.assertTrue(isinstance(inst, text_type))
 
     def test_msgid_is_translation_string(self):
         another = self._makeOne('msgid', domain='domain', default='default',
@@ -129,7 +129,7 @@ class TestChameleonTranslate(unittest.TestCase):
         translate = self._makeOne(None)
         marker = StringMarker()
         result = translate("dummy", default=marker)
-        self.failUnless(result is marker)
+        self.assertTrue(result is marker)
 
     def test_msgid_translationstring_translator_is_None(self):
         msgid = DummyTranslationString('abc')

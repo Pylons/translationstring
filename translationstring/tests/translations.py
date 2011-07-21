@@ -16,6 +16,8 @@ class Translations(gettext.GNUTranslations, object):
         self.files = filter(None, [getattr(fileobj, 'name', None)])
         self.domain = domain
         self._domains = {}
+        if fileobj is not None:
+            fileobj.close()
 
     def load(cls, dirname=None, locales=None, domain=DEFAULT_DOMAIN):
         """Load translations from the given directory.
@@ -32,7 +34,8 @@ class Translations(gettext.GNUTranslations, object):
         if locales is not None:
             locales = [str(locale) for locale in locales]
         filename = gettext.find(domain, dirname, locales)
-        return cls(fileobj=open(filename, 'rb'), domain=domain)
+        fp = open(filename, 'rb')
+        return cls(fileobj=fp, domain=domain)
     load = classmethod(load)
     
     def dugettext(self, domain, message):
