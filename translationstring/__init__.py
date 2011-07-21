@@ -1,13 +1,15 @@
 import re
-import six
 from gettext import NullTranslations
+from translationstring.compat import text_type
+from translationstring.compat import string_types
+from translationstring.compat import PY3
 
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
-class TranslationString(six.text_type):
+class TranslationString(text_type):
     """
     The constructor for a :term:`translation string`.  A translation
     string is a Unicode-like object that has some extra metadata.
@@ -62,15 +64,15 @@ class TranslationString(six.text_type):
         # identity* of a non-``None`` but empty ``default`` value
         # provided to it.  See the comment in ChameleonTranslate.
 
-        self = six.text_type.__new__(self, msgid)
+        self = text_type.__new__(self, msgid)
         if isinstance(msgid, self.__class__):
             domain = domain or msgid.domain and msgid.domain[:]
             default = default or msgid.default and msgid.default[:]
             mapping = mapping or msgid.mapping and msgid.mapping.copy()
-            msgid = six.text_type(msgid)
+            msgid = text_type(msgid)
         self.domain = domain
         if default is None:
-            default = six.text_type(msgid)
+            default = text_type(msgid)
         self.default = default
         self.mapping = mapping
         return self
@@ -98,7 +100,7 @@ class TranslationString(six.text_type):
         if self.mapping and translated:
             def replace(match):
                 whole, param1, param2 = match.groups()
-                return six.text_type(self.mapping.get(param1 or param2, whole))
+                return text_type(self.mapping.get(param1 or param2, whole))
             translated = _interp_regex.sub(replace, translated)
 
         return translated
@@ -107,7 +109,7 @@ class TranslationString(six.text_type):
         return self.__class__, self.__getstate__()
 
     def __getstate__(self):
-        return six.text_type(self), self.domain, self.default, self.mapping
+        return text_type(self), self.domain, self.default, self.mapping
 
 def TranslationStringFactory(domain):
     """ Create a factory which will generate translation strings
@@ -175,7 +177,7 @@ def ChameleonTranslate(translator):
         # preserving ``default`` in the aforementioned case.  So we
         # spray these indignant comments all over this module. ;-)
 
-        if not isinstance(msgid, six.string_types):
+        if not isinstance(msgid, string_types):
             return msgid
 
         tstring = msgid
@@ -196,7 +198,7 @@ def ugettext_policy(translations, tstring, domain):
     """ A translator policy function which unconditionally uses the
     ``ugettext`` API on the translations object."""
     
-    if six.PY3: # pragma: no cover
+    if PY3: # pragma: no cover
         _gettext = translations.gettext
     else: # pragma: no cover
         _gettext = translations.ugettext
@@ -213,7 +215,7 @@ def dugettext_policy(translations, tstring, domain):
     if getattr(translations, 'dugettext', None) is not None:
         return translations.dugettext(domain, tstring)
     
-    if six.PY3: # pragma: no cover
+    if PY3: # pragma: no cover
         _gettext = translations.gettext
     else: # pragma: no cover
         _gettext = translations.ugettext
@@ -265,7 +267,7 @@ def ungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
         
-    if six.PY3: # pragma: no cover
+    if PY3: # pragma: no cover
         _gettext = translations.ngettext
     else: # pragma: no cover
         _gettext = translations.ungettext
@@ -283,7 +285,7 @@ def dungettext_policy(translations, singular, plural, n, domain):
     if getattr(translations, 'dungettext', None) is not None:
         return translations.dungettext(domain, singular, plural, n)
         
-    if six.PY3: # pragma: no cover
+    if PY3: # pragma: no cover
         _gettext = translations.ngettext
     else: # pragma: no cover
         _gettext = translations.ungettext
@@ -326,7 +328,8 @@ def Pluralizer(translations=None, policy=None):
         translations = NullTranslations()
     def pluralizer(singular, plural, n, domain=None, mapping=None):
         """ Pluralize this object """
-        translated = six.text_type(policy(translations, singular, plural, n, domain))
+        translated = text_type(
+            policy(translations, singular, plural, n, domain))
         if translated and '$' in translated and mapping:
             return TranslationString(translated, mapping=mapping).interpolate()
         return translated

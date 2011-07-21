@@ -1,4 +1,3 @@
-import gettext
 import unittest
 from translationstring.tests.translations import Translations
 
