@@ -330,23 +330,23 @@ class DummyTranslations(object):
         self.result = result
         self.domain = domain
         
-    def gettext(self, tstring):
+    def gettext(self, tstring): # pragma: no cover
         return self.result
     
-    def ngettext(self, singular, plural, n):
+    def ngettext(self, singular, plural, n): # pragma: no cover
         return self.result
 
-    def ugettext(self, tstring):
+    def ugettext(self, tstring): # pragma: no cover
         return self.result
 
-    def dugettext(self, domain, tstring):
+    def dugettext(self, domain, tstring): # pragma: no cover
         self.asked_domain = domain
         return self.result
 
-    def ungettext(self, singular, plural, n):
+    def ungettext(self, singular, plural, n): # pragma: no cover
         return self.result
 
-    def dungettext(self, domain, singular, plural, n):
+    def dungettext(self, domain, singular, plural, n): # pragma: no cover
         self.asked_domain = domain
         return self.result
 

@@ -39,18 +39,18 @@ class Translations(gettext.GNUTranslations, object):
         """Like ``ugettext()``, but look the message up in the specified
         domain.
         """
-        if six.PY3:
+        if six.PY3: # pragma: no cover
             return self._domains.get(domain, self).gettext(message)
-        else:
+        else: # pragma: no cover
             return self._domains.get(domain, self).ugettext(message)
     
     def dungettext(self, domain, singular, plural, num):
         """Like ``ungettext()`` but look the message up in the specified
         domain.
         """
-        if six.PY3:
+        if six.PY3: # pragma: no cover
             return self._domains.get(domain, self).ngettext(singular, plural, num)
-        else:
+        else: # pragma: no cover
             return self._domains.get(domain, self).ungettext(singular, plural, num)
         
     # Most of the downwards code, until it get's included in stdlib, from:

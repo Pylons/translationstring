@@ -196,9 +196,9 @@ def ugettext_policy(translations, tstring, domain):
     """ A translator policy function which unconditionally uses the
     ``ugettext`` API on the translations object."""
     
-    if six.PY3:
+    if six.PY3: # pragma: no cover
         _gettext = translations.gettext
-    else:
+    else: # pragma: no cover
         _gettext = translations.ugettext
     
     return _gettext(tstring)
@@ -213,9 +213,9 @@ def dugettext_policy(translations, tstring, domain):
     if getattr(translations, 'dugettext', None) is not None:
         return translations.dugettext(domain, tstring)
     
-    if six.PY3:
+    if six.PY3: # pragma: no cover
         _gettext = translations.gettext
-    else:
+    else: # pragma: no cover
         _gettext = translations.ugettext
     
     return _gettext(tstring)
@@ -265,9 +265,9 @@ def ungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
         
-    if six.PY3:
+    if six.PY3: # pragma: no cover
         _gettext = translations.ngettext
-    else:
+    else: # pragma: no cover
         _gettext = translations.ungettext
     
     return _gettext(singular, plural, n)
@@ -283,9 +283,9 @@ def dungettext_policy(translations, singular, plural, n, domain):
     if getattr(translations, 'dungettext', None) is not None:
         return translations.dungettext(domain, singular, plural, n)
         
-    if six.PY3:
+    if six.PY3: # pragma: no cover
         _gettext = translations.ngettext
-    else:
+    else: # pragma: no cover
         _gettext = translations.ungettext
     
     return _gettext(singular, plural, n)
