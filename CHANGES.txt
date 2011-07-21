@@ -4,6 +4,10 @@ translationstring
 Next release
 ------------
 
+- Python 3 compatibility (thanks to Joe Dallago, GSOC student).
+
+- Remove testing dependency on Babel.
+
 - Moved to GitHub (https://github.com/Pylons/translationstring).
 
 - Added tox.ini for testing purposes.
