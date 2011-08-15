@@ -9,6 +9,8 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
+_null = text_type()
+
 class TranslationString(text_type):
     """
     The constructor for a :term:`translation string`.  A translation
@@ -18,6 +20,11 @@ class TranslationString(text_type):
     ``msgid`` must be the :term:`message identifier` for the
     translation string.  It must be a ``unicode`` object or a ``str``
     object encoded in the default system encoding.
+
+    Note that if the object is coerced to its native string type
+    (i.e. string or unicode, depending on the platform), the default
+    translation (or message identifier if not applicable) is returned
+    with any mapped values applied.
 
     Optional keyword arguments to this object's constructor include
     ``domain``, ``default``, and ``mapping``.
@@ -64,7 +71,7 @@ class TranslationString(text_type):
         # identity* of a non-``None`` but empty ``default`` value
         # provided to it.  See the comment in ChameleonTranslate.
 
-        self = text_type.__new__(self, msgid)
+        self = text_type.__new__(self, _null + msgid)
         if isinstance(msgid, self.__class__):
             domain = domain or msgid.domain and msgid.domain[:]
             default = default or msgid.default and msgid.default[:]
@@ -122,11 +129,18 @@ class TranslationString(text_type):
 
         return translated
 
+    if PY3:
+        def __str__(self):
+            return self.interpolate()
+    else:
+        def __unicode__(self):
+            return self.interpolate()
+
     def __reduce__(self):
         return self.__class__, self.__getstate__()
 
     def __getstate__(self):
-        return text_type(self), self.domain, self.default, self.mapping
+        return text_type(_null + self), self.domain, self.default, self.mapping
 
 def TranslationStringFactory(domain):
     """ Create a factory which will generate translation strings
