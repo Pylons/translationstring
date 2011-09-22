@@ -1,6 +1,11 @@
 translationstring
 =================
 
+Next release
+------------
+
+- No changes yet.
+
 0.4 (09-22-2011)
 ----------------
 
