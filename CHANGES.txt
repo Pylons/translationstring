@@ -1,8 +1,8 @@
 translationstring
 =================
 
-Next release
-------------
+0.4 (09-22-2011)
+----------------
 
 - Python 3 compatibility (thanks to Joe Dallago, GSOC student).
 
