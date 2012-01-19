@@ -197,12 +197,12 @@ def ChameleonTranslate(translator):
 def ugettext_policy(translations, tstring, domain):
     """ A translator policy function which unconditionally uses the
     ``ugettext`` API on the translations object."""
-    
+
     if PY3: # pragma: no cover
         _gettext = translations.gettext
     else: # pragma: no cover
         _gettext = translations.ugettext
-    
+
     return _gettext(tstring)
 
 def dugettext_policy(translations, tstring, domain):
@@ -214,12 +214,12 @@ def dugettext_policy(translations, tstring, domain):
         domain = getattr(tstring, 'domain', None) or default_domain
     if getattr(translations, 'dugettext', None) is not None:
         return translations.dugettext(domain, tstring)
-    
+
     if PY3: # pragma: no cover
         _gettext = translations.gettext
     else: # pragma: no cover
         _gettext = translations.ugettext
-    
+
     return _gettext(tstring)
 
 def Translator(translations=None, policy=None):
@@ -233,7 +233,7 @@ def Translator(translations=None, policy=None):
     ``policy`` should be a callable which accepts three arguments:
     ``translations``, ``tstring`` and ``domain``.  It must perform the
     actual translation lookup.  If ``policy`` is ``None``, the
-    :func:`translationstring.dugettext_policy` policy will be used. 
+    :func:`translationstring.dugettext_policy` policy will be used.
 
     The callable returned accepts three arguments: ``tstring``
     (required), ``domain`` (optional) and ``mapping`` (optional).
@@ -258,6 +258,10 @@ def Translator(translations=None, policy=None):
             translated = policy(translations, tstring, domain)
         if translated == tstring:
             translated = tstring.default
+        if tstring.mapping is None:
+            tstring.mapping = mapping
+        elif mapping is not None:
+            tstring.mapping.update(mapping)
         if translated and '$' in translated and tstring.mapping:
             translated = tstring.interpolate(translated)
         return translated
@@ -266,30 +270,30 @@ def Translator(translations=None, policy=None):
 def ungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
-        
+
     if PY3: # pragma: no cover
         _gettext = translations.ngettext
     else: # pragma: no cover
         _gettext = translations.ungettext
-    
+
     return _gettext(singular, plural, n)
 
 def dungettext_policy(translations, singular, plural, n, domain):
     """ A pluralizer policy function which assumes the use of the
     :class:`babel.support.Translations` class, which supports the
     dungettext API; falls back to ungettext."""
-    
+
     default_domain = getattr(translations, 'domain', None) or 'messages'
     domain = domain or default_domain
-    
+
     if getattr(translations, 'dungettext', None) is not None:
         return translations.dungettext(domain, singular, plural, n)
-        
+
     if PY3: # pragma: no cover
         _gettext = translations.ngettext
     else: # pragma: no cover
         _gettext = translations.ungettext
-    
+
     return _gettext(singular, plural, n)
 
 def Pluralizer(translations=None, policy=None):

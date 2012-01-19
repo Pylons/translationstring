@@ -7,7 +7,7 @@ class TranslatorIntegrationTests(unittest.TestCase):
         here = os.path.abspath(os.path.dirname(__file__))
         localedir = os.path.join(here, 'fixtures', 'locales')
         return Translations.load(localedir, locales=['de'])
-        
+
     def test_translator_ugettext_policy(self):
         translations = self._makeTranslations()
         from translationstring import Translator
@@ -18,10 +18,10 @@ class TranslatorIntegrationTests(unittest.TestCase):
 
         tstring = TranslationString(
             'Enter a comma separated list of user names.')
-        
+
         result = translator(tstring)
         self.assertEqual(result, 'Eine kommagetrennte Liste von Benutzernamen.')
-        
+
     def test_translator_dugettext_policy(self):
         translations = self._makeTranslations()
         from translationstring import Translator
@@ -32,10 +32,10 @@ class TranslatorIntegrationTests(unittest.TestCase):
 
         tstring = TranslationString(
             'Enter a comma separated list of user names.')
-        
+
         result = translator(tstring)
         self.assertEqual(result, 'Eine kommagetrennte Liste von Benutzernamen.')
-        
+
     def test_translator_with_interpolation(self):
         translations = self._makeTranslations()
         from translationstring import Translator
@@ -45,17 +45,44 @@ class TranslatorIntegrationTests(unittest.TestCase):
         translator = Translator(translations, dugettext_policy)
 
         tstring = TranslationString('Visit ${url}', mapping={'url':'url'})
-        
+
         result = translator(tstring)
         self.assertEqual(result, 'Besuchen url')
-        
+
+    def test_translator_with_interpolation_in_translate(self):
+        translations = self._makeTranslations()
+        from translationstring import Translator
+        from translationstring import dugettext_policy
+        from translationstring import TranslationString
+
+        translator = Translator(translations, dugettext_policy)
+
+        tstring = TranslationString('Visit ${url}')
+
+        result = translator(tstring, mapping={'url':'url'})
+        self.assertEqual(result, 'Besuchen url')
+
+    def test_translator_with_interpolation_overridden_in_translate(self):
+        translations = self._makeTranslations()
+        from translationstring import Translator
+        from translationstring import dugettext_policy
+        from translationstring import TranslationString
+
+        translator = Translator(translations, dugettext_policy)
+
+        tstring = TranslationString('Visit ${url}', mapping={'url':'url'})
+
+        result = translator(tstring, mapping={'url':'new_url'})
+        self.assertEqual(result, 'Besuchen new_url')
+
+
 class PluralizerIntegrationTests(unittest.TestCase):
     def _makeTranslations(self):
         import os
         here = os.path.abspath(os.path.dirname(__file__))
         localedir = os.path.join(here, 'fixtures', 'locales')
         return Translations.load(localedir, locales=['de'])
-        
+
     def test_pluralizer_ungettext_policy(self):
         translations = self._makeTranslations()
         from translationstring import Pluralizer
