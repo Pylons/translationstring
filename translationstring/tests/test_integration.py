@@ -75,6 +75,22 @@ class TranslatorIntegrationTests(unittest.TestCase):
         result = translator(tstring, mapping={'url':'new_url'})
         self.assertEqual(result, 'Besuchen new_url')
 
+    def test_translator_with_interpolation_partially_overridden_in_translate(self):
+        translations = self._makeTranslations()
+        from translationstring import Translator
+        from translationstring import dugettext_policy
+        from translationstring import TranslationString
+
+        translator = Translator(translations, dugettext_policy)
+
+        # Partial initial mapping
+        tstring = TranslationString('${one} ${two} ${three}', mapping={
+            'one': 'yksi', 'two': 'kaksi'})
+
+        # Partial override
+        result = translator(tstring, mapping={'two': 'kakkonen'})
+        self.assertEqual(result, 'yksi kakkonen ${three}')
+
 
 class PluralizerIntegrationTests(unittest.TestCase):
     def _makeTranslations(self):
