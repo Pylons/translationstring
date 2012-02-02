@@ -4,7 +4,7 @@ translationstring
 Next release
 ------------
 
-- No changes yet.
+- Support formatting of translation strings with %-operator.
 
 0.4 (09-22-2011)
 ----------------
