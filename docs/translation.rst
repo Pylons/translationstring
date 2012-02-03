@@ -48,7 +48,9 @@ The optional ``domain`` argument can be used to specify or override
 the domain of the ``tstring`` argument (useful when ``tstring`` is a
 normal string rather than a translation string).  The optional
 ``mapping`` argument can specify the interpolation mapping, useful
-when the ``tstring`` argument is not a translation string.
+when the ``tstring`` argument is not a translation string. If 
+``tstring`` is a translation string its mapping data, if present, is
+combined with the data from the ``mapping`` argument.
 
 .. code-block:: python
    :linenos:
