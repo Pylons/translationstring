@@ -91,6 +91,9 @@ class TranslatorIntegrationTests(unittest.TestCase):
         result = translator(tstring, mapping={'two': 'kakkonen'})
         self.assertEqual(result, 'yksi kakkonen ${three}')
 
+        # Make sure original mapping is not touched
+        self.assertEqual(tstring.mapping, {'one': 'yksi', 'two': 'kaksi'})
+
 
 class PluralizerIntegrationTests(unittest.TestCase):
     def _makeTranslations(self):

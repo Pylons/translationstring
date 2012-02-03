@@ -270,15 +270,18 @@ def Translator(translations=None, policy=None):
     def translator(tstring, domain=None, mapping=None):
         if not hasattr(tstring, 'interpolate'):
             tstring = TranslationString(tstring, domain=domain, mapping=mapping)
+        elif mapping:
+            if tstring.mapping:
+                new_mapping = tstring.mapping.copy()
+                new_mapping.update(mapping)
+            else:
+                new_mapping = mapping
+            tstring = TranslationString(tstring, domain=domain, mapping=new_mapping)
         translated = tstring
         if translations is not None:
             translated = policy(translations, tstring, domain)
         if translated == tstring:
             translated = tstring.default
-        if tstring.mapping is None:
-            tstring.mapping = mapping
-        elif mapping is not None:
-            tstring.mapping.update(mapping)
         if translated and '$' in translated and tstring.mapping:
             translated = tstring.interpolate(translated)
         return translated
