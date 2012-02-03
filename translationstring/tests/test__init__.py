@@ -65,6 +65,12 @@ class TestTranslationString(unittest.TestCase):
         # Make sure original is not changed
         self.assertEqual(inst.mapping, {'one': '1', 'two': '3'})
 
+    def test_format_required_dict_argument(self):
+        import operator
+        inst = self._makeOne('msgid', domain='domain', default='default')
+        self.assertRaises(ValueError, operator.mod, inst, ('foo',))
+
+
     def test_interpolate_substitution(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne('This is $name version ${version}.',
