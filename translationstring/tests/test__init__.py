@@ -42,6 +42,29 @@ class TestTranslationString(unittest.TestCase):
         self.assertEqual(inst.mapping, 'mapping')
         self.assertEqual(inst.domain, 'domain')
 
+    def test_format_no_exising_mapping(self):
+        inst = self._makeOne('msgid', domain='domain', default='default')
+        mapping = {'foo': 'bar'}
+        new_inst = inst % mapping
+        self.assertTrue(new_inst is not inst)
+        self.assertEqual(new_inst, 'msgid')
+        self.assertEqual(new_inst.default, 'default')
+        self.assertEqual(new_inst.domain, 'domain')
+        self.assertEqual(new_inst.mapping, mapping)
+        # Make sure a copy is made to prevent changes in the original
+        # dictionary from modifying our mapping.
+        self.assertTrue(new_inst.mapping is not mapping)
+
+    def test_format_extend_existing_mapping(self):
+        inst = self._makeOne('msgid', domain='domain', default='default',
+                mapping={'one': '1', 'two': '3'})
+        new_inst = inst % {'two': '2', 'three': '3'}
+        self.assertEqual(
+                new_inst.mapping,
+                {'one': '1', 'two': '2', 'three': '3'})
+        # Make sure original is not changed
+        self.assertEqual(inst.mapping, {'one': '1', 'two': '3'})
+
     def test_interpolate_substitution(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne('This is $name version ${version}.',

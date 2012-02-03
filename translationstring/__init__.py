@@ -77,6 +77,23 @@ class TranslationString(text_type):
         self.mapping = mapping
         return self
 
+    def __mod__(self, options):
+        """Create a new TranslationString instance with an updated mapping.
+        This makes it possible to use the standard python %-style string
+        formatting with translatable strings. Only dictionary
+        arguments are supported.
+        """
+        if not isinstance(options, dict):
+            raise ValueError(
+                    'Can only interpolate translationstring '
+                    'with dictionaries.')
+        if self.mapping:
+            mapping = self.mapping.copy()
+            mapping.update(options)
+        else:
+            mapping = options.copy()
+        return TranslationString(self, mapping=mapping)
+
     def interpolate(self, translated=None):
         """ Interpolate the value ``translated`` which is assumed to
         be a Unicode object containing zero or more *replacement

@@ -59,6 +59,15 @@ replacement marker itself:
    from translationstring import TranslationString
    ts = TranslationString('Add ${number}', mapping={'number':1})
 
+You can also create a new translation string instance with a mapping
+using the standard python %-operator:
+
+.. code-block:: python
+   :linenos:
+
+   from translationstring import TranslationString
+   ts = TranslationString('Add ${number}') % {'number': 1}
+
 You may interpolate a translation string with a mapping:
 
 .. code-block:: python
