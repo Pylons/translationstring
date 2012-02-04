@@ -1,8 +1,8 @@
 translationstring
 =================
 
-Next release
-------------
+1.0 (2012-02-04)
+----------------
 
 - coerce non-string values to a string during translation, except for None.
 

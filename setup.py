@@ -13,7 +13,7 @@ except:
     CHANGES = ''
 
 setup(name='translationstring',
-      version='0.4',
+      version='1.0',
       description=('Utility library for i18n relied on by various Repoze '
                    'and Pyramid packages'),
       long_description=README + '\n\n' +  CHANGES,
