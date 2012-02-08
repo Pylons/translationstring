@@ -1,0 +1,6 @@
+include *.txt
+include tox.ini
+recursive-include translationstring/tests/fixtures/locales *.mo
+recursive-include translationstring/tests/fixtures/locales *.po
+graft docs
+prune docs/_build

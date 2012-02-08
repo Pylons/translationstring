@@ -4,7 +4,7 @@ translationstring
 Next release
 ------------
 
-- ...
+- Add MANIFEST to make sure all files are present in a release.
 
 
 1.0 (2012-02-04)
