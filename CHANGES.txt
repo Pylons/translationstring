@@ -1,10 +1,11 @@
 translationstring
 =================
 
-Next release
-------------
+1.1 (2012-02-08)
+----------------
 
-- Add MANIFEST to make sure all files are present in a release.
+- Add MANIFEST to make sure all files are present in a release. This fixes
+  `ticket 8 <https://github.com/Pylons/translationstring/issues/8>`_.
 
 
 1.0 (2012-02-04)
