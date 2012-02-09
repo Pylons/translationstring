@@ -6,7 +6,7 @@ class TestTranslationString(unittest.TestCase):
     def _getTargetClass(self):
         from translationstring import TranslationString
         return TranslationString
-        
+
     def _makeOne(self, msgid, **kw):
         klass = self._getTargetClass()
         return klass(msgid, **kw)
@@ -23,6 +23,14 @@ class TestTranslationString(unittest.TestCase):
         self.assertEqual(result.domain, 'domain')
         self.assertEqual(result.default, 'default')
         self.assertEqual(result.mapping, {'a':1})
+
+    def test_msgid_equals_string(self):
+        mapping = {"name": "Zope", "version": 3}
+        inst = self._makeOne('This is $name version ${version}.',
+                             mapping=mapping)
+        result = 'This is Zope version 3.'
+        self.assertEqual(result, inst)
+        self.assertEqual(inst, result)
 
     def test_default_None(self):
         inst = self._makeOne('msgid')
@@ -70,12 +78,23 @@ class TestTranslationString(unittest.TestCase):
         inst = self._makeOne('msgid', domain='domain', default='default')
         self.assertRaises(ValueError, operator.mod, inst, ('foo',))
 
+    def test_repr(self):
+        msgid = text_type('This is $name version ${version}.')
+        inst = self._makeOne(msgid)
+        self.assertEqual(repr(inst), repr(msgid))
 
     def test_interpolate_substitution(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne('This is $name version ${version}.',
                               mapping=mapping)
         result = inst.interpolate()
+        self.assertEqual(result, u('This is Zope version 3.'))
+
+    def test_interpolate_substitution(self):
+        mapping = {"name": "Zope", "version": 3}
+        inst = self._makeOne('This is $name version ${version}.',
+                              mapping=mapping)
+        result = text_type(inst)
         self.assertEqual(result, u('This is Zope version 3.'))
 
     def test_interpolate_subsitution_more_than_once(self):
