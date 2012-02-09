@@ -4,10 +4,8 @@ translationstring
 Next release
 ------------
 
-- When a translation string is coerced to its native string type
-  (i.e. the built-in string or unicode type), the default translation
-  (or msgid if not applicable) is returned with any mapped values
-  applied.
+- Return the result of ``interpolate()`` as the string representation
+  instead of the message id.
 
 1.1 (2012-02-08)
 ----------------
