@@ -28,8 +28,9 @@ class TestTranslationString(unittest.TestCase):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne('This is $name version ${version}.',
                              mapping=mapping)
-        self.assertEqual(str(inst), inst)
-        self.assertEqual(inst, str(inst))
+        result = 'This is Zope version 3.'
+        self.assertEqual(result, inst)
+        self.assertEqual(inst, result)
 
     def test_default_None(self):
         inst = self._makeOne('msgid')

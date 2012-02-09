@@ -4,6 +4,10 @@ translationstring
 Next release
 ------------
 
+- Implement custom equality operator that compares favorably to both a
+  string identical to the message id, and to the interpolated string
+  representation.
+
 - Return the result of ``interpolate()`` as the string representation
   instead of the message id.
 

@@ -84,6 +84,17 @@ class TranslationString(text_type):
         self.mapping = mapping
         return self
 
+    def __eq__(self, other):
+        # First compare strings with strings; this tests that the
+        # original message string compares favorably to an identical
+        # string.
+        string = text_type(other)
+        if text_type.__eq__(self, string):
+            return True
+
+        # Next, interpolate and compare the result.
+        return self.interpolate() == string
+
     def __mod__(self, options):
         """Create a new TranslationString instance with an updated mapping.
         This makes it possible to use the standard python %-style string
