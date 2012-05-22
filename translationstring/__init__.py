@@ -207,7 +207,7 @@ def ChameleonTranslate(translator):
         if translator is None:
             result = tstring.interpolate()
         else:
-            result = translator(tstring)
+            result = translator(tstring, context)
 
         return result
 
