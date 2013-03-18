@@ -140,6 +140,27 @@ class TestTranslationStringFactory(unittest.TestCase):
         self.assertEqual(inst.mapping, 'mapping')
         self.assertEqual(inst.default, 'default')
 
+    def test_msgid_is_translation_string_override_domain(self):
+        user_factory = self._makeOne('user')
+        factory = self._makeOne('budge')
+
+        wrapped_inst = user_factory('wrapped_msgid', mapping={'a':1}, default='default')
+        wrapper_inst = factory(wrapped_inst)
+
+        self.assertEqual(str(wrapper_inst), 'wrapped_msgid')
+        self.assertEqual(wrapper_inst.domain, 'user')
+
+    def test_msgid_is_translation_string_override_kwarg(self):
+        user_factory = self._makeOne('user')
+        factory = self._makeOne('budge')
+
+        wrapped_inst = user_factory('wrapped_msgid', mapping={'a':1}, default='default')
+        wrapper_inst = factory(wrapped_inst, mapping={'b':1}, default='other_default')
+
+        self.assertEqual(str(wrapper_inst), 'wrapped_msgid')
+        self.assertEqual(wrapper_inst.mapping, {'b':1})
+        self.assertEqual(wrapper_inst.default, 'other_default')
+
 
 class TestChameleonTranslate(unittest.TestCase):
     def _makeOne(self, translator):
