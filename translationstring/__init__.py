@@ -128,7 +128,7 @@ class TranslationString(text_type):
     def __getstate__(self):
         return text_type(self), self.domain, self.default, self.mapping
 
-def TranslationStringFactory(domain):
+def TranslationStringFactory(factory_domain):
     """ Create a factory which will generate translation strings
     without requiring that each call to the factory be passed a
     ``domain`` value.  A single argument is passed to this class'
@@ -143,6 +143,14 @@ def TranslationStringFactory(domain):
         """ Provided a msgid (Unicode object or :term:`translation
         string`) and optionally a mapping object, and a *default
         value*, return a :term:`translation string` object."""
+
+        # if we are passing in a TranslationString as the msgid, then
+        # use its domain
+        if isinstance(msgid, TranslationString):
+            domain = msgid.domain or factory_domain
+        else:
+            domain = factory_domain
+
         return TranslationString(msgid, domain=domain, default=default,
                                  mapping=mapping)
     return create
