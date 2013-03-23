@@ -4,7 +4,10 @@ translationstring
 Next release
 ------------
 
-- ...
+- If the object passed to a TranslationStringFactory ``__call__`` method is
+  itself a translation string, use the passed object's ``domain`` instead of
+  the domain passed to the factory's contstructor.  See
+  https://github.com/Pylons/translationstring/pull/12 .
 
 
 1.1 (2012-02-08)
