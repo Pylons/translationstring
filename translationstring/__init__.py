@@ -30,7 +30,7 @@ class TranslationString(text_type):
     ``default`` represents an explicit *default text* for this
     translation string.  Default text appears when the translation
     string cannot be translated.  Usually, the ``msgid`` of a
-    translation string serves double duty as as its default text.
+    translation string serves double duty as its default text.
     However, using this option you can provide a different default
     text for this translation string.  This feature is useful when the
     default of a translation string is too complicated or too long to
