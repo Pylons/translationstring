@@ -30,7 +30,7 @@ class TranslationString(text_type):
     ``default`` represents an explicit *default text* for this
     translation string.  Default text appears when the translation
     string cannot be translated.  Usually, the ``msgid`` of a
-    translation string serves double duty as as its default text.
+    translation string serves double duty as its default text.
     However, using this option you can provide a different default
     text for this translation string.  This feature is useful when the
     default of a translation string is too complicated or too long to
@@ -97,7 +97,7 @@ class TranslationString(text_type):
     def interpolate(self, translated=None):
         """ Interpolate the value ``translated`` which is assumed to
         be a Unicode object containing zero or more *replacement
-        markers* (``${foo}`` or ``${bar}``) using the ``mapping``
+        markers* (``$foo`` or ``${bar}``) using the ``mapping``
         dictionary attached to this instance.  If the ``mapping``
         dictionary is empty or ``None``, no interpolation is
         performed.
@@ -111,7 +111,7 @@ class TranslationString(text_type):
         # NB: this function should never never lose the *original
         # identity* of a non-``None`` but empty ``default`` value it
         # is provided.  If (translated == default) , it should return the
-        # *orignal* default, not a derivation.  See the comment below in
+        # *original* default, not a derivation.  See the comment below in
         # ChameleonTranslate.
 
         if self.mapping and translated:
