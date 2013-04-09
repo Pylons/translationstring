@@ -97,7 +97,7 @@ class TranslationString(text_type):
     def interpolate(self, translated=None):
         """ Interpolate the value ``translated`` which is assumed to
         be a Unicode object containing zero or more *replacement
-        markers* (``${foo}`` or ``${bar}``) using the ``mapping``
+        markers* (``$foo`` or ``${bar}``) using the ``mapping``
         dictionary attached to this instance.  If the ``mapping``
         dictionary is empty or ``None``, no interpolation is
         performed.
