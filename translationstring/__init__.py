@@ -111,7 +111,7 @@ class TranslationString(text_type):
         # NB: this function should never never lose the *original
         # identity* of a non-``None`` but empty ``default`` value it
         # is provided.  If (translated == default) , it should return the
-        # *orignal* default, not a derivation.  See the comment below in
+        # *original* default, not a derivation.  See the comment below in
         # ChameleonTranslate.
 
         if self.mapping and translated:
