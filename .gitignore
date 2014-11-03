@@ -5,6 +5,7 @@
 *.pt.py
 *.txt.py
 *~
+*.sw[opqr]
 .coverage
 .tox/
 nosetests.xml
