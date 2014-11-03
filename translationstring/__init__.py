@@ -215,8 +215,7 @@ def ChameleonTranslate(translator):
         tstring = msgid
 
         if not hasattr(tstring, 'interpolate'):
-            tstring = TranslationString(msgid, domain, default, mapping)
-
+            tstring = TranslationString(msgid, domain, default, mapping, context)
         if translator is None:
             result = tstring.interpolate()
         else:
@@ -226,7 +225,7 @@ def ChameleonTranslate(translator):
 
     return translate
 
-def ugettext_policy(translations, tstring, domain):
+def ugettext_policy(translations, tstring, domain, context):
     """ A translator policy function which unconditionally uses the
     ``ugettext`` API on the translations object."""
 
@@ -235,15 +234,22 @@ def ugettext_policy(translations, tstring, domain):
     else: # pragma: no cover
         _gettext = translations.ugettext
 
+    if context:
+	# Workaround for http://bugs.python.org/issue2504?
+        tstring = u'%s\x04%s' % (context, tstring)
+
     return _gettext(tstring)
 
-def dugettext_policy(translations, tstring, domain):
+def dugettext_policy(translations, tstring, domain, context):
     """ A translator policy function which assumes the use of a
     :class:`babel.support.Translations` translations object, which
     supports the dugettext API; fall back to ugettext."""
     if domain is None:
         default_domain = getattr(translations, 'domain', None) or 'messages'
         domain = getattr(tstring, 'domain', None) or default_domain
+    if context:
+	# Workaround for http://bugs.python.org/issue2504?
+        tstring = u'%s\x04%s' % (context, tstring)
     if getattr(translations, 'dugettext', None) is not None:
         return translations.dugettext(domain, tstring)
 
@@ -282,19 +288,19 @@ def Translator(translations=None, policy=None):
     """
     if policy is None:
         policy = dugettext_policy
-    def translator(tstring, domain=None, mapping=None):
+    def translator(tstring, domain=None, mapping=None, context=None):
         if not hasattr(tstring, 'interpolate'):
-            tstring = TranslationString(tstring, domain=domain, mapping=mapping)
+            tstring = TranslationString(tstring, domain=domain, mapping=mapping, context=context)
         elif mapping:
             if tstring.mapping:
                 new_mapping = tstring.mapping.copy()
                 new_mapping.update(mapping)
             else:
                 new_mapping = mapping
-            tstring = TranslationString(tstring, domain=domain, mapping=new_mapping)
+            tstring = TranslationString(tstring, domain=domain, mapping=new_mapping, context=context)
         translated = tstring
         domain = domain or tstring.domain
-        context = tstring.context
+        context = context or tstring.context
         if translations is not None:
             translated = policy(translations, tstring, domain, context)
         if translated == tstring:
@@ -326,7 +332,9 @@ def dungettext_policy(translations, singular, plural, n, domain, context):
 
     default_domain = getattr(translations, 'domain', None) or 'messages'
     domain = domain or default_domain
-
+    if context:
+	# Workaround for http://bugs.python.org/issue2504?
+        singular = u'%s\x04%s' % (context, singular)
     if getattr(translations, 'dungettext', None) is not None:
         return translations.dungettext(domain, singular, plural, n)
 
@@ -334,10 +342,6 @@ def dungettext_policy(translations, singular, plural, n, domain, context):
         _gettext = translations.ngettext
     else: # pragma: no cover
         _gettext = translations.ungettext
-
-    if context:
-	# Workaround for http://bugs.python.org/issue2504?
-        singular = u'%s\x04%s' % (context, singular)
 
     return _gettext(singular, plural, n)
 
