@@ -118,14 +118,14 @@ class TestTranslationString(unittest.TestCase):
                              mapping='mapping')
         result = inst.__reduce__()
         self.assertEqual(result, (klass, (u('msgid'), 'domain', u('default'), 
-                                          'mapping')))
+                                          'mapping', None)))
 
     def test___getstate__(self):
         inst = self._makeOne('msgid', default='default', domain='domain',
                              mapping='mapping')
         result = inst.__getstate__()
         self.assertEqual(result,
-                         (u('msgid'), 'domain', u('default'), 'mapping'))
+                         (u('msgid'), 'domain', u('default'), 'mapping', None))
 
 class TestTranslationStringFactory(unittest.TestCase):
     def _makeOne(self, domain):
@@ -253,7 +253,7 @@ class TestTranslator(unittest.TestCase):
 
     def test_policy_returns_msgid(self):
         tstring = DummyTranslationString('msgid', default='default')
-        def policy(translations, msg, domain):
+        def policy(translations, msg, domain, context):
             return msg
         inst = self._makeOne('ignoreme', policy)
         result = inst(tstring)
@@ -261,7 +261,7 @@ class TestTranslator(unittest.TestCase):
 
     def test_policy_returns_translation(self):
         tstring = DummyTranslationString('msgid')
-        def policy(translations, msg, domain):
+        def policy(translations, msg, domain, context):
             return 'translated'
         inst = self._makeOne('ignoreme', policy)
         result = inst(tstring)
@@ -284,7 +284,7 @@ class TestPluralizer(unittest.TestCase):
 
     def test_policy_returns_translated(self):
         translations = DummyTranslations('result')
-        def policy(translations, singular, plural, n, domain):
+        def policy(translations, singular, plural, n, domain, context):
             return 'translated'
         inst = self._makeOne(translations, policy)
         tstring = DummyTranslationString('msgid')
@@ -292,19 +292,19 @@ class TestPluralizer(unittest.TestCase):
         self.assertEqual(result, 'translated')
 
 class Test_ugettext_policy(unittest.TestCase):
-    def _callFUT(self, translations, tstring, domain):
+    def _callFUT(self, translations, tstring, domain, context):
         from translationstring import ugettext_policy
-        return ugettext_policy(translations, tstring, domain)
+        return ugettext_policy(translations, tstring, domain, context)
 
     def test_it(self):
         translations = DummyTranslations('result')
-        result = self._callFUT(translations, 'string', None)
+        result = self._callFUT(translations, 'string', None, None)
         self.assertEqual(result, 'result')
 
 class Test_dugettext_policy(unittest.TestCase):
-    def _callFUT(self, translations, tstring, domain):
+    def _callFUT(self, translations, tstring, domain, context=None):
         from translationstring import dugettext_policy
-        return dugettext_policy(translations, tstring, domain)
+        return dugettext_policy(translations, tstring, domain, context)
 
     def test_it_use_default_domain(self):
         translations = DummyTranslations('result', domain=None)
@@ -343,9 +343,9 @@ class Test_dugettext_policy(unittest.TestCase):
 
 class Test_ungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,
-                 mapping=None):
+                 mapping=None, context=None):
         from translationstring import ungettext_policy
-        return ungettext_policy(translations, singular, plural, n, domain)
+        return ungettext_policy(translations, singular, plural, n, domain, context)
 
     def test_it(self):
         translations = DummyTranslations('result')
@@ -354,9 +354,9 @@ class Test_ungettext_policy(unittest.TestCase):
 
 class Test_dungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,
-                 mapping=None):
+                 mapping=None, context=None):
         from translationstring import dungettext_policy
-        return dungettext_policy(translations, singular, plural, n, domain)
+        return dungettext_policy(translations, singular, plural, n, domain, context)
 
     def test_it_use_default_domain(self):
         translations = DummyTranslations('result')
@@ -408,10 +408,11 @@ class DummyTranslations(object):
         return self.result
 
 class DummyTranslationString(text_type):
-    def __new__(cls, msgid='', domain=None, default=None, mapping=None):
+    def __new__(cls, msgid='', domain=None, default=None, mapping=None, context=None):
         self = text_type.__new__(cls, msgid)
         text_type.__init__(self, msgid)
         self.domain = domain
+        self.context = context
         self.mapping = mapping
         if default is None:
             default = msgid

@@ -4,6 +4,8 @@ translationstring
 Next release
 ------------
 
+- Add support for message contexts.
+
 - If the object passed to a TranslationStringFactory ``__call__`` method is
   itself a translation string, use the passed object's ``domain`` instead of
   the domain passed to the factory's contstructor.  See
