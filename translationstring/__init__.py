@@ -45,6 +45,9 @@ class TranslationString(text_type):
     string` *replacement marker* instances found within the ``msgid``
     (or ``default``) value of this translation string.
 
+    ``context`` represents the :term:`translation context`.  By default,
+    the translation context is ``None``.
+
     After a translation string is constructed, it behaves like most
     other ``unicode`` objects; its ``msgid`` value will be displayed
     when it is treated like a ``unicode`` object.  Only when its
@@ -56,9 +59,9 @@ class TranslationString(text_type):
     ``mapping`` attribute.  The object otherwise behaves much like a
     Unicode string.
     """
-    __slots__ = ('domain', 'default', 'mapping')
+    __slots__ = ('domain', 'context', 'default', 'mapping')
 
-    def __new__(self, msgid, domain=None, default=None, mapping=None):
+    def __new__(self, msgid, domain=None, default=None, mapping=None, context=None):
 
         # NB: this function should never never lose the *original
         # identity* of a non-``None`` but empty ``default`` value
@@ -67,10 +70,12 @@ class TranslationString(text_type):
         self = text_type.__new__(self, msgid)
         if isinstance(msgid, self.__class__):
             domain = domain or msgid.domain and msgid.domain[:]
+            context = context or msgid.context and msgid.context[:]
             default = default or msgid.default and msgid.default[:]
             mapping = mapping or msgid.mapping and msgid.mapping.copy()
             msgid = text_type(msgid)
         self.domain = domain
+        self.context = context
         if default is None:
             default = text_type(msgid)
         self.default = default
@@ -126,7 +131,7 @@ class TranslationString(text_type):
         return self.__class__, self.__getstate__()
 
     def __getstate__(self):
-        return text_type(self), self.domain, self.default, self.mapping
+        return text_type(self), self.domain, self.default, self.mapping, self.context
 
 def TranslationStringFactory(factory_domain):
     """ Create a factory which will generate translation strings
@@ -139,7 +144,7 @@ def TranslationStringFactory(factory_domain):
     ``__call__`` method of an instance of this class have the meaning
     as described by the constructor of the
     :class:`translationstring.TranslationString`"""
-    def create(msgid, mapping=None, default=None):
+    def create(msgid, mapping=None, default=None, context=None):
         """ Provided a msgid (Unicode object or :term:`translation
         string`) and optionally a mapping object, and a *default
         value*, return a :term:`translation string` object."""
@@ -152,7 +157,7 @@ def TranslationStringFactory(factory_domain):
             domain = factory_domain
 
         return TranslationString(msgid, domain=domain, default=default,
-                                 mapping=mapping)
+                                 mapping=mapping, context=context)
     return create
 
 def ChameleonTranslate(translator):
@@ -288,8 +293,10 @@ def Translator(translations=None, policy=None):
                 new_mapping = mapping
             tstring = TranslationString(tstring, domain=domain, mapping=new_mapping)
         translated = tstring
+        domain = domain or tstring.domain
+        context = tstring.context
         if translations is not None:
-            translated = policy(translations, tstring, domain)
+            translated = policy(translations, tstring, domain, context)
         if translated == tstring:
             translated = tstring.default
         if translated and '$' in translated and tstring.mapping:
@@ -297,7 +304,7 @@ def Translator(translations=None, policy=None):
         return translated
     return translator
 
-def ungettext_policy(translations, singular, plural, n, domain):
+def ungettext_policy(translations, singular, plural, n, domain, context):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
 
@@ -306,9 +313,13 @@ def ungettext_policy(translations, singular, plural, n, domain):
     else: # pragma: no cover
         _gettext = translations.ungettext
 
+    if context:
+	# Workaround for http://bugs.python.org/issue2504?
+        singular = u'%s\x04%s' % (context, singular)
+
     return _gettext(singular, plural, n)
 
-def dungettext_policy(translations, singular, plural, n, domain):
+def dungettext_policy(translations, singular, plural, n, domain, context):
     """ A pluralizer policy function which assumes the use of the
     :class:`babel.support.Translations` class, which supports the
     dungettext API; falls back to ungettext."""
@@ -323,6 +334,10 @@ def dungettext_policy(translations, singular, plural, n, domain):
         _gettext = translations.ngettext
     else: # pragma: no cover
         _gettext = translations.ungettext
+
+    if context:
+	# Workaround for http://bugs.python.org/issue2504?
+        singular = u'%s\x04%s' % (context, singular)
 
     return _gettext(singular, plural, n)
 
