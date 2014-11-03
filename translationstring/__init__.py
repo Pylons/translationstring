@@ -379,10 +379,10 @@ def Pluralizer(translations=None, policy=None):
         policy = dungettext_policy
     if translations is None:
         translations = NullTranslations()
-    def pluralizer(singular, plural, n, domain=None, mapping=None):
+    def pluralizer(singular, plural, n, domain=None, mapping=None, context=None):
         """ Pluralize this object """
         translated = text_type(
-            policy(translations, singular, plural, n, domain))
+            policy(translations, singular, plural, n, domain, context))
         if translated and '$' in translated and mapping:
             return TranslationString(translated, mapping=mapping).interpolate()
         return translated
