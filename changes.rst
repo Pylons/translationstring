@@ -1,8 +1,8 @@
 translationstring
 =================
 
-Next release
-------------
+1.2 (2014-11-04)
+----------------
 
 - Add support for message contexts.
 
