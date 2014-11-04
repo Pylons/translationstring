@@ -247,6 +247,7 @@ def dugettext_policy(translations, tstring, domain, context):
     if domain is None:
         default_domain = getattr(translations, 'domain', None) or 'messages'
         domain = getattr(tstring, 'domain', None) or default_domain
+    context = context or getattr(tstring, 'context', None)
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
         tstring = u'%s\x04%s' % (context, tstring)
