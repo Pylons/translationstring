@@ -307,6 +307,12 @@ class Test_ugettext_policy(unittest.TestCase):
         self.assertEqual(translations.params, (u'button\x04p\xf8f',))
         self.assertEqual(result, 'result')
 
+    def test_msgctxt_no_translation_found(self):
+        input = u'p\xf8f'
+        translations = DummyTranslations(input)
+        result = self._callFUT(translations, input, None, 'button')
+        self.assertEqual(result, u'p\xf8f')
+
 class Test_dugettext_policy(unittest.TestCase):
     def _callFUT(self, translations, tstring, domain, context=None):
         from translationstring import dugettext_policy
@@ -361,6 +367,12 @@ class Test_dugettext_policy(unittest.TestCase):
         self.assertEqual(translations.params, ('messages', u'button\x04p\xf8f',))
         self.assertEqual(result, 'result')
 
+    def test_msgctxt_no_translation_found(self):
+        translations = DummyTranslations(u'button\x04p\xf8f')
+        tstring = DummyTranslationString(u'p\xf8f', context='button')
+        result = self._callFUT(translations, tstring, None)
+        self.assertEqual(result, u'p\xf8f')
+
 class Test_ungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,
                  mapping=None, context=None):
@@ -377,6 +389,12 @@ class Test_ungettext_policy(unittest.TestCase):
         result = self._callFUT(translations, u'p\xf8f', 'plural', 1, context='button')
         self.assertEqual(translations.params, (u'button\x04p\xf8f', 'plural', 1))
         self.assertEqual(result, 'result')
+
+    def test_msgctxt_no_translation(self):
+        translations = DummyTranslations(u'button\x04p\xf8f')
+        result = self._callFUT(translations, u'p\xf8f', 'plural', 1, context='button')
+        self.assertEqual(translations.params, (u'button\x04p\xf8f', 'plural', 1))
+        self.assertEqual(result, u'p\xf8f')
 
 class Test_dungettext_policy(unittest.TestCase):
     def _callFUT(self, translations, singular, plural, n, domain=None,

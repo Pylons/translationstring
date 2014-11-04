@@ -236,9 +236,12 @@ def ugettext_policy(translations, tstring, domain, context):
 
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        tstring = u'%s\x04%s' % (context, tstring)
+        msgid = u'%s\x04%s' % (context, tstring)
+    else:
+        msgid = tstring
 
-    return _gettext(tstring)
+    translated = _gettext(msgid)
+    return tstring if translated == msgid else translated
 
 def dugettext_policy(translations, tstring, domain, context):
     """ A translator policy function which assumes the use of a
@@ -250,16 +253,20 @@ def dugettext_policy(translations, tstring, domain, context):
     context = context or getattr(tstring, 'context', None)
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        tstring = u'%s\x04%s' % (context, tstring)
+        msgid = u'%s\x04%s' % (context, tstring)
+    else:
+        msgid = tstring
+
     if getattr(translations, 'dugettext', None) is not None:
-        return translations.dugettext(domain, tstring)
+        translated = translations.dugettext(domain, msgid)
+    else:
+        if PY3: # pragma: no cover
+            _gettext = translations.gettext
+        else: # pragma: no cover
+            _gettext = translations.ugettext
 
-    if PY3: # pragma: no cover
-        _gettext = translations.gettext
-    else: # pragma: no cover
-        _gettext = translations.ugettext
-
-    return _gettext(tstring)
+        translated = _gettext(msgid)
+    return tstring if translated == msgid else translated
 
 def Translator(translations=None, policy=None):
     """
@@ -322,9 +329,12 @@ def ungettext_policy(translations, singular, plural, n, domain, context):
 
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        singular = u'%s\x04%s' % (context, singular)
+        msgid = u'%s\x04%s' % (context, singular)
+    else:
+        msgid = singular
 
-    return _gettext(singular, plural, n)
+    translated = _gettext(msgid, plural, n)
+    return singular if translated == msgid else translated
 
 def dungettext_policy(translations, singular, plural, n, domain, context):
     """ A pluralizer policy function which assumes the use of the
@@ -335,16 +345,19 @@ def dungettext_policy(translations, singular, plural, n, domain, context):
     domain = domain or default_domain
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        singular = u'%s\x04%s' % (context, singular)
+        msgid = u'%s\x04%s' % (context, singular)
+    else:
+        msgid = singular
     if getattr(translations, 'dungettext', None) is not None:
-        return translations.dungettext(domain, singular, plural, n)
+        translated = translations.dungettext(domain, msgid, plural, n)
+    else:
+        if PY3: # pragma: no cover
+            _gettext = translations.ngettext
+        else: # pragma: no cover
+            _gettext = translations.ungettext
 
-    if PY3: # pragma: no cover
-        _gettext = translations.ngettext
-    else: # pragma: no cover
-        _gettext = translations.ungettext
-
-    return _gettext(singular, plural, n)
+        translated = _gettext(msgid, plural, n)
+    return singular if translated == msgid else translated
 
 def Pluralizer(translations=None, policy=None):
     """
