@@ -19,3 +19,9 @@ pypyenv/
 build/
 dist/
 translationstring/coverage.xml
+
+/.Python
+/bin
+/include
+/lib
+
