@@ -4,7 +4,7 @@ translationstring
 1.3 (unreleased)
 ----------------
 
-- ..
+- Fix Python 3-specific test failures.
 
 
 1.2 (2014-11-04)

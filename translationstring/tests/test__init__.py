@@ -432,7 +432,7 @@ class DummyTranslations(object):
         self.domain = domain
         
     def gettext(self, tstring): # pragma: no cover
-        self.params = (string,)
+        self.params = (tstring,)
         return self.result
     
     def ngettext(self, singular, plural, n): # pragma: no cover
