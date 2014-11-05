@@ -1,7 +1,7 @@
 translationstring
 =================
 
-1.3 (unreleased)
+1.3 (2014-11-05)
 ----------------
 
 - Fix Python 3-specific test failures.
