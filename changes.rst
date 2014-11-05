@@ -6,6 +6,7 @@ translationstring
 
 - Fix Python 3-specific test failures.
 
+- Restore compatibility with Python 3.2.
 
 1.2 (2014-11-04)
 ----------------

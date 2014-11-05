@@ -9,6 +9,8 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
+CONTEXT_MASK = text_type('%s\x04%s')
+
 class TranslationString(text_type):
     """
     The constructor for a :term:`translation string`.  A translation
@@ -236,7 +238,7 @@ def ugettext_policy(translations, tstring, domain, context):
 
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        msgid = u'%s\x04%s' % (context, tstring)
+        msgid = CONTEXT_MASK % (context, tstring)
     else:
         msgid = tstring
 
@@ -253,7 +255,7 @@ def dugettext_policy(translations, tstring, domain, context):
     context = context or getattr(tstring, 'context', None)
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        msgid = u'%s\x04%s' % (context, tstring)
+        msgid = CONTEXT_MASK % (context, tstring)
     else:
         msgid = tstring
 
@@ -329,7 +331,7 @@ def ungettext_policy(translations, singular, plural, n, domain, context):
 
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        msgid = u'%s\x04%s' % (context, singular)
+        msgid = CONTEXT_MASK % (context, singular)
     else:
         msgid = singular
 
@@ -345,7 +347,7 @@ def dungettext_policy(translations, singular, plural, n, domain, context):
     domain = domain or default_domain
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
-        msgid = u'%s\x04%s' % (context, singular)
+        msgid = CONTEXT_MASK % (context, singular)
     else:
         msgid = singular
     if getattr(translations, 'dungettext', None) is not None:
