@@ -12,7 +12,7 @@
 # All configuration values have a default value; values that are commented
 # out serve to show the default value.
 
-import sys, os
+import sys, os, datetime
 
 # If your extensions are in another directory, add it here. If the
 # directory is relative to the documentation root, use os.path.abspath to
@@ -49,13 +49,14 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'translationstring'
-copyright = '2011, Agendaless Consulting <pylons-discuss@googlegroups.com>'
+thisyear = datetime.datetime.now().year
+copyright = '2011-%s, Agendaless Consulting <pylons-discuss@googlegroups.com>' % thisyear
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '0.4'
+version = '1.3'
 # The full version, including alpha/beta/rc tags.
 release = version
 
