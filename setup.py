@@ -15,7 +15,7 @@ except:
 docs_extras = [
     'Sphinx',
     'docutils',
-    'pylons-sphinx-themes >= 0.3',
+    'pylons-sphinx-themes',
 ]
 
 setup(
