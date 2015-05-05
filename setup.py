@@ -12,6 +12,12 @@ except:
     README = ''
     CHANGES = ''
 
+docs_extras = [
+    'Sphinx',
+    'docutils',
+    'pylons-sphinx-themes >= 0.3',
+]
+
 setup(name='translationstring',
       version='1.4dev',
       description=('Utility library for i18n relied on by various Repoze '
@@ -42,5 +48,8 @@ setup(name='translationstring',
       include_package_data=True,
       zip_safe=False,
       test_suite="translationstring",
+      extras_require={
+            'docs': docs_extras,
+      },
       )
 

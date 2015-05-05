@@ -13,23 +13,8 @@
 # out serve to show the default value.
 
 import sys, os, datetime
-
-# If your extensions are in another directory, add it here. If the
-# directory is relative to the documentation root, use os.path.abspath to
-# make it absolute, like shown here.
-#sys.path.append(os.path.abspath('some/directory'))
-
-parent = os.path.dirname(os.path.dirname(__file__))
-sys.path.append(os.path.abspath(parent))
-wd = os.getcwd()
-os.chdir(parent)
-os.system('%s setup.py test -q' % sys.executable)
-os.chdir(wd)
-
-for item in os.listdir(parent):
-    if item.endswith('.egg'):
-        sys.path.append(os.path.join(parent, item))
-
+import pkg_resources
+import pylons_sphinx_themes
 
 # General configuration
 # ---------------------
@@ -56,7 +41,7 @@ copyright = '2011-%s, Agendaless Consulting <pylons-discuss@googlegroups.com>' %
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '1.3'
+version = pkg_resources.get_distribution('translationstring').version
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -82,7 +67,7 @@ today_fmt = '%B %d, %Y'
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_module_names = True
+add_module_names = False
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
@@ -94,11 +79,12 @@ pygments_style = 'sphinx'
 
 # Options for HTML output
 # -----------------------
-
-sys.path.append(os.path.abspath('_themes'))
-html_theme_path = ['_themes']
+# sys.path.append(os.path.abspath('_themes'))
 html_theme = 'pyramid'
-html_theme_options = dict(github_url='https://github.com/Pylons/translationstring')
+html_theme_path = pylons_sphinx_themes.get_html_themes_path()
+html_theme_options = dict(
+    github_url='https://github.com/Pylons/translationstring',
+    )
 
 
 # The style sheet to use for HTML and HTML Help pages. A file of that name
@@ -116,7 +102,7 @@ html_theme_options = dict(github_url='https://github.com/Pylons/translationstrin
 
 # The name of an image file (within the static path) to place at the top of
 # the sidebar.
-html_logo = '.static/logo_hi.gif'
+#html_logo = '.static/logo_hi.gif'
 
 # The name of an image file (within the static path) to use as favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or
@@ -135,7 +121,7 @@ html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+html_use_smartypants = False
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
@@ -188,7 +174,7 @@ latex_documents = [
 
 # The name of an image file (relative to this directory) to place at the
 # top of the title page.
-latex_logo = '.static/logo_hi.gif'
+#latex_logo = '.static/logo_hi.gif'
 
 # For "manual" documents, if this is true, then toplevel headings are
 # parts, not chapters.
