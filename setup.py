@@ -13,7 +13,7 @@ except:
     CHANGES = ''
 
 docs_extras = [
-    'Sphinx',
+    'Sphinx >= 1.3.1',
     'docutils',
     'pylons-sphinx-themes',
 ]
