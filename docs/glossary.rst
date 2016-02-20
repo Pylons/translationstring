@@ -57,9 +57,9 @@ Glossary
      internationalization.  
 
    Babel
-     A `collection of tools <http://babel.edgewall.org/>`_ for
+     A `collection of tools <http://babel.pocoo.org/en/latest/>`_ for
      internationalizing Python applications.
 
    Chameleon
-     `chameleon <http://chameleon.repoze.org>`_ is templating language
-     written and maintained by Malthe Borch.
+     `chameleon <https://chameleon.readthedocs.org/en/latest/>`_ is templating
+     language written and maintained by Malthe Borch.
