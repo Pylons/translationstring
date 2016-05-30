@@ -154,12 +154,23 @@ class TestTranslationStringFactory(unittest.TestCase):
         user_factory = self._makeOne('user')
         factory = self._makeOne('budge')
 
-        wrapped_inst = user_factory('wrapped_msgid', mapping={'a':1}, default='default')
-        wrapper_inst = factory(wrapped_inst, mapping={'b':1}, default='other_default')
+        wrapped_inst = user_factory('wrapped_msgid', default='default')
+        wrapper_inst = factory(wrapped_inst, default='other_default')
 
         self.assertEqual(str(wrapper_inst), 'wrapped_msgid')
-        self.assertEqual(wrapper_inst.mapping, {'b':1})
         self.assertEqual(wrapper_inst.default, 'other_default')
+
+    def test_msgid_is_translation_string_update_mapping(self):
+        user_factory = self._makeOne('user')
+        factory = self._makeOne('budge')
+
+        # if the inner msgid defines a mapping
+        wrapped_inst = user_factory('wrapped_msgid: ${a} ${b} ${c}', mapping={'a': 1, 'b': 1}, default='default')
+        wrapper_inst = factory(wrapped_inst, mapping={'b': 2, 'c': 2}, default='other_default')
+
+        self.assertEqual(str(wrapper_inst), 'wrapped_msgid: ${a} ${b} ${c}')
+        # it must be present when wrapped
+        self.assertEqual(wrapper_inst.mapping, {'a': 1, 'b': 2, 'c': 2})
 
 
 class TestChameleonTranslate(unittest.TestCase):
