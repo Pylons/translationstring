@@ -3,10 +3,11 @@ from translationstring import text_type
 from translationstring.compat import u
 
 class TestTranslationString(unittest.TestCase):
+
     def _getTargetClass(self):
         from translationstring import TranslationString
         return TranslationString
-        
+
     def _makeOne(self, msgid, **kw):
         klass = self._getTargetClass()
         return klass(msgid, **kw)
@@ -117,7 +118,7 @@ class TestTranslationString(unittest.TestCase):
         inst = self._makeOne('msgid', default='default', domain='domain',
                              mapping='mapping')
         result = inst.__reduce__()
-        self.assertEqual(result, (klass, (u('msgid'), 'domain', u('default'), 
+        self.assertEqual(result, (klass, (u('msgid'), 'domain', u('default'),
                                           'mapping', None)))
 
     def test___getstate__(self):
@@ -128,6 +129,7 @@ class TestTranslationString(unittest.TestCase):
                          (u('msgid'), 'domain', u('default'), 'mapping', None))
 
 class TestTranslationStringFactory(unittest.TestCase):
+
     def _makeOne(self, domain):
         from translationstring import TranslationStringFactory
         return TranslationStringFactory(domain)
@@ -144,7 +146,8 @@ class TestTranslationStringFactory(unittest.TestCase):
         user_factory = self._makeOne('user')
         factory = self._makeOne('budge')
 
-        wrapped_inst = user_factory('wrapped_msgid', mapping={'a':1}, default='default')
+        wrapped_inst = user_factory(
+            'wrapped_msgid', mapping={'a':1}, default='default')
         wrapper_inst = factory(wrapped_inst)
 
         self.assertEqual(str(wrapper_inst), 'wrapped_msgid')
@@ -154,15 +157,31 @@ class TestTranslationStringFactory(unittest.TestCase):
         user_factory = self._makeOne('user')
         factory = self._makeOne('budge')
 
-        wrapped_inst = user_factory('wrapped_msgid', mapping={'a':1}, default='default')
-        wrapper_inst = factory(wrapped_inst, mapping={'b':1}, default='other_default')
+        wrapped_inst = user_factory('wrapped_msgid', default='default')
+        wrapper_inst = factory(wrapped_inst, default='other_default')
 
         self.assertEqual(str(wrapper_inst), 'wrapped_msgid')
-        self.assertEqual(wrapper_inst.mapping, {'b':1})
         self.assertEqual(wrapper_inst.default, 'other_default')
+
+    def test_msgid_is_translation_string_update_mapping(self):
+        user_factory = self._makeOne('user')
+        factory = self._makeOne('budge')
+
+        # if the inner msgid defines a mapping
+        wrapped_inst = user_factory('wrapped_msgid: ${a} ${b} ${c}',
+                                    mapping={'a': 1, 'b': 1},
+                                    default='default')
+        wrapper_inst = factory(wrapped_inst,
+                               mapping={'b': 2, 'c': 2},
+                               default='other_default')
+
+        self.assertEqual(str(wrapper_inst), 'wrapped_msgid: ${a} ${b} ${c}')
+        # it must be present when wrapped
+        self.assertEqual(wrapper_inst.mapping, {'a': 1, 'b': 2, 'c': 2})
 
 
 class TestChameleonTranslate(unittest.TestCase):
+
     def _makeOne(self, translator):
         from translationstring import ChameleonTranslate
         return ChameleonTranslate(translator)
@@ -216,6 +235,7 @@ class TestChameleonTranslate(unittest.TestCase):
 
 
 class TestTranslator(unittest.TestCase):
+
     def _makeOne(self, translations=None, policy=None):
         from translationstring import Translator
         return Translator(translations, policy)
@@ -225,7 +245,7 @@ class TestTranslator(unittest.TestCase):
         tstring = DummyTranslationString('$abc', mapping=True)
         result = inst(tstring)
         self.assertEqual(result, 'interpolated')
-        
+
     def test_translations_None_interpolation_not_required(self):
         inst = self._makeOne()
         tstring = DummyTranslationString('msgid', mapping=False)
@@ -276,7 +296,7 @@ class TestPluralizer(unittest.TestCase):
         inst = self._makeOne()
         result = inst('$abc', '$abc', 1, mapping={'abc':1})
         self.assertEqual(result, '1')
-        
+
     def test_translations_None_interpolation_not_required(self):
         inst = self._makeOne()
         result = inst('msgid', 'msgid', 1)
@@ -292,6 +312,7 @@ class TestPluralizer(unittest.TestCase):
         self.assertEqual(result, 'translated')
 
 class Test_ugettext_policy(unittest.TestCase):
+
     def _callFUT(self, translations, tstring, domain, context):
         from translationstring import ugettext_policy
         return ugettext_policy(translations, tstring, domain, context)
@@ -314,6 +335,7 @@ class Test_ugettext_policy(unittest.TestCase):
         self.assertEqual(result, u('p\xf8f'))
 
 class Test_dugettext_policy(unittest.TestCase):
+
     def _callFUT(self, translations, tstring, domain, context=None):
         from translationstring import dugettext_policy
         return dugettext_policy(translations, tstring, domain, context)
@@ -357,14 +379,16 @@ class Test_dugettext_policy(unittest.TestCase):
         translations = DummyTranslations('result')
         tstring = DummyTranslationString(u('p\xf8f'), context='button')
         result = self._callFUT(translations, tstring, None)
-        self.assertEqual(translations.params, ('messages', u('button\x04p\xf8f'),))
+        self.assertEqual(translations.params,
+                         ('messages', u('button\x04p\xf8f'),))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_override(self):
         translations = DummyTranslations('result')
         tstring = DummyTranslationString(u('p\xf8f'), context='other')
         result = self._callFUT(translations, tstring, None, context='button')
-        self.assertEqual(translations.params, ('messages', u('button\x04p\xf8f'),))
+        self.assertEqual(translations.params,
+                         ('messages', u('button\x04p\xf8f'),))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_no_translation_found(self):
@@ -374,10 +398,12 @@ class Test_dugettext_policy(unittest.TestCase):
         self.assertEqual(result, u('p\xf8f'))
 
 class Test_ungettext_policy(unittest.TestCase):
+
     def _callFUT(self, translations, singular, plural, n, domain=None,
                  mapping=None, context=None):
         from translationstring import ungettext_policy
-        return ungettext_policy(translations, singular, plural, n, domain, context)
+        return ungettext_policy(
+            translations, singular, plural, n, domain, context)
 
     def test_it(self):
         translations = DummyTranslations('result')
@@ -386,21 +412,27 @@ class Test_ungettext_policy(unittest.TestCase):
 
     def test_msgctxt(self):
         translations = DummyTranslations('result')
-        result = self._callFUT(translations, u('p\xf8f'), 'plural', 1, context='button')
-        self.assertEqual(translations.params, (u('button\x04p\xf8f'), 'plural', 1))
+        result = self._callFUT(
+            translations, u('p\xf8f'), 'plural', 1, context='button')
+        self.assertEqual(translations.params,
+                         (u('button\x04p\xf8f'), 'plural', 1))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_no_translation(self):
         translations = DummyTranslations(u('button\x04p\xf8f'))
-        result = self._callFUT(translations, u('p\xf8f'), 'plural', 1, context='button')
-        self.assertEqual(translations.params, (u('button\x04p\xf8f'), 'plural', 1))
+        result = self._callFUT(
+            translations, u('p\xf8f'), 'plural', 1, context='button')
+        self.assertEqual(translations.params,
+                         (u('button\x04p\xf8f'), 'plural', 1))
         self.assertEqual(result, u('p\xf8f'))
 
 class Test_dungettext_policy(unittest.TestCase):
+
     def _callFUT(self, translations, singular, plural, n, domain=None,
                  mapping=None, context=None):
         from translationstring import dungettext_policy
-        return dungettext_policy(translations, singular, plural, n, domain, context)
+        return dungettext_policy(
+            translations, singular, plural, n, domain, context)
 
     def test_it_use_default_domain(self):
         translations = DummyTranslations('result')
@@ -427,14 +459,15 @@ class Test_dungettext_policy(unittest.TestCase):
         self.assertEqual(result, 'result')
 
 class DummyTranslations(object):
+
     def __init__(self, result, domain=None):
         self.result = result
         self.domain = domain
-        
+
     def gettext(self, tstring): # pragma: no cover
         self.params = (tstring,)
         return self.result
-    
+
     def ngettext(self, singular, plural, n): # pragma: no cover
         self.params = (singular, plural, n)
         return self.result
@@ -458,7 +491,9 @@ class DummyTranslations(object):
         return self.result
 
 class DummyTranslationString(text_type):
-    def __new__(cls, msgid='', domain=None, default=None, mapping=None, context=None):
+
+    def __new__(cls, msgid='', domain=None, default=None, mapping=None,
+                context=None):
         self = text_type.__new__(cls, msgid)
         text_type.__init__(self, msgid)
         self.domain = domain
@@ -468,7 +503,6 @@ class DummyTranslationString(text_type):
             default = msgid
         self.default = default
         return self
-        
+
     def interpolate(self, translated=None):
         return 'interpolated'
-    

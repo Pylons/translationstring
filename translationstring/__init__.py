@@ -74,7 +74,12 @@ class TranslationString(text_type):
             domain = domain or msgid.domain and msgid.domain[:]
             context = context or msgid.context and msgid.context[:]
             default = default or msgid.default and msgid.default[:]
-            mapping = mapping or msgid.mapping and msgid.mapping.copy()
+            if msgid.mapping:
+                if mapping:
+                    for k, v in msgid.mapping.items():
+                        mapping.setdefault(k, v)
+                else:
+                    mapping = msgid.mapping.copy()
             msgid = text_type(msgid)
         self.domain = domain
         self.context = context
