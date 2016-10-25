@@ -4,7 +4,7 @@ translationstring
 1.4 (unreleased)
 ----------------
 
-- ..
+- Drop support for Python 2.6
 
 
 1.3 (2014-11-05)
