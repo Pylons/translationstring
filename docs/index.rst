@@ -1,7 +1,7 @@
 translationstring
 =================
 
-A library used by various `Pylons Project <http://pylonsproject.org>`_
+A library used by various `Pylons Project <https://pylonsproject.org>`_
 packages for internationalization (i18n) duties.
 
 This package provides a :term:`translation string` class, a
