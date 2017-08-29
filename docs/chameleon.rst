@@ -1,5 +1,5 @@
 Chameleon Translate Function Support
-=====================================
+====================================
 
 :func:`translationstring.ChameleonTranslate` is a function which
 returns a callable suitable for use as the ``translate`` argument to

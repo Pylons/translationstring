@@ -61,5 +61,5 @@ Glossary
      internationalizing Python applications.
 
    Chameleon
-     `chameleon <https://chameleon.readthedocs.org/en/latest/>`_ is templating
+     `chameleon <https://chameleon.readthedocs.io/en/latest/>`_ is templating
      language written and maintained by Malthe Borch.
