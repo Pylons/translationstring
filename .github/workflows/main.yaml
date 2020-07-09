@@ -47,7 +47,7 @@ jobs:
       - name: Insert version number
         run: |
           version=$(echo $GITHUB_REF | cut -d/ -f3)
-          sed -ie "/^version/s/=.*/= $version/" setup.cfg
+          sed -ie "/version/s/=.*/='$version',/" setup.py
 
       - name: Build a binary wheel and a source tarball
         run: python setup.py sdist bdist_wheel

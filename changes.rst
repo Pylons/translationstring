@@ -1,10 +1,11 @@
 translationstring
 =================
 
-1.4 (unreleased)
+1.4 (2020-07-09)
 ----------------
 
-- Drop support for Python 2.6 and 3.2
+- Drop support for Python 2.6, 3.2 and 3.
+- Update license classifiers
 
 
 1.3 (2014-11-05)
