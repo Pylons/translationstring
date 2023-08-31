@@ -174,7 +174,7 @@ def ChameleonTranslate(translator):
     argument to the ``chameleon.zpt.template.PageTemplate``
     constructor) to allow our translation machinery to drive template
     translation.  A single required argument ``translator`` is
-    passsed.  The ``translator`` provided should be a callable which
+    passed.  The ``translator`` provided should be a callable which
     accepts a single argument ``translation_string`` ( a
     :class:`translationstring.TranslationString` instance) which
     returns a ``unicode`` object as a translation.  ``translator`` may
