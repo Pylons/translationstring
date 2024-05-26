@@ -21,12 +21,18 @@ Glossary
      predefines a :term:`translation domain`.
 
    Translation Domain
-     A string representing the "context" in which a particular
+     A string representing the "domain" in which a particular
      translation was made.  For example the word "java" might be
      translated differently if the translation domain is
      "programming-languages" than would be if the translation domain
      was "coffee".  Every :term:`translation string` has an associated
      translation domain.
+
+   Translation Context
+     An optional string added to help resolve translation ambiguities
+     associated with very short terms, such as those which appear in
+     GUI menus, etc.  See:
+     https://www.gnu.org/software/gettext/manual/gettext.html#Contexts
 
    Message Identifier
      An unchanging string that is the identifier for a particular
