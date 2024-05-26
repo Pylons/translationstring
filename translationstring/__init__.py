@@ -1,17 +1,14 @@
 import re
 from gettext import NullTranslations
-from translationstring.compat import text_type
-from translationstring.compat import string_types
-from translationstring.compat import PY3
 
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
-CONTEXT_MASK = text_type('%s\x04%s')
+CONTEXT_MASK = u'%s\x04%s'
 
-class TranslationString(text_type):
+class TranslationString(str):
     """
     The constructor for a :term:`translation string`.  A translation
     string is a Unicode-like object that has some extra metadata.
@@ -63,13 +60,15 @@ class TranslationString(text_type):
     """
     __slots__ = ('domain', 'context', 'default', 'mapping')
 
-    def __new__(self, msgid, domain=None, default=None, mapping=None, context=None):
+    def __new__(
+        self, msgid, domain=None, default=None, mapping=None, context=None
+    ):
 
         # NB: this function should never never lose the *original
         # identity* of a non-``None`` but empty ``default`` value
         # provided to it.  See the comment in ChameleonTranslate.
 
-        self = text_type.__new__(self, msgid)
+        self = str.__new__(self, msgid)
         if isinstance(msgid, self.__class__):
             domain = domain or msgid.domain and msgid.domain[:]
             context = context or msgid.context and msgid.context[:]
@@ -80,11 +79,11 @@ class TranslationString(text_type):
                         mapping.setdefault(k, v)
                 else:
                     mapping = msgid.mapping.copy()
-            msgid = text_type(msgid)
+            msgid = str(msgid)
         self.domain = domain
         self.context = context
         if default is None:
-            default = text_type(msgid)
+            default = str(msgid)
         self.default = default
         self.mapping = mapping
         return self
@@ -129,7 +128,7 @@ class TranslationString(text_type):
         if self.mapping and translated:
             def replace(match):
                 whole, param1, param2 = match.groups()
-                return text_type(self.mapping.get(param1 or param2, whole))
+                return str(self.mapping.get(param1 or param2, whole))
             translated = _interp_regex.sub(replace, translated)
 
         return translated
@@ -138,7 +137,7 @@ class TranslationString(text_type):
         return self.__class__, self.__getstate__()
 
     def __getstate__(self):
-        return text_type(self), self.domain, self.default, self.mapping, self.context
+        return str(self), self.domain, self.default, self.mapping, self.context
 
 def TranslationStringFactory(factory_domain):
     """ Create a factory which will generate translation strings
@@ -214,15 +213,17 @@ def ChameleonTranslate(translator):
         # preserving ``default`` in the aforementioned case.  So we
         # spray these indignant comments all over this module. ;-)
 
-        if not isinstance(msgid, string_types):
+        if not isinstance(msgid, str):
             if msgid is not None:
-                msgid = text_type(msgid)
+                msgid = str(msgid)
             return msgid
 
         tstring = msgid
 
         if not hasattr(tstring, 'interpolate'):
-            tstring = TranslationString(msgid, domain, default, mapping, context)
+            tstring = TranslationString(
+                msgid, domain, default, mapping, context
+            )
         if translator is None:
             result = tstring.interpolate()
         else:
@@ -236,10 +237,7 @@ def ugettext_policy(translations, tstring, domain, context):
     """ A translator policy function which unconditionally uses the
     ``ugettext`` API on the translations object."""
 
-    if PY3: # pragma: no cover
-        _gettext = translations.gettext
-    else: # pragma: no cover
-        _gettext = translations.ugettext
+    _gettext = translations.gettext
 
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
@@ -267,10 +265,7 @@ def dugettext_policy(translations, tstring, domain, context):
     if getattr(translations, 'dugettext', None) is not None:
         translated = translations.dugettext(domain, msgid)
     else:
-        if PY3: # pragma: no cover
-            _gettext = translations.gettext
-        else: # pragma: no cover
-            _gettext = translations.ugettext
+        _gettext = translations.gettext
 
         translated = _gettext(msgid)
     return tstring if translated == msgid else translated
@@ -305,14 +300,18 @@ def Translator(translations=None, policy=None):
         policy = dugettext_policy
     def translator(tstring, domain=None, mapping=None, context=None):
         if not hasattr(tstring, 'interpolate'):
-            tstring = TranslationString(tstring, domain=domain, mapping=mapping, context=context)
+            tstring = TranslationString(
+                tstring, domain=domain, mapping=mapping, context=context
+            )
         elif mapping:
             if tstring.mapping:
                 new_mapping = tstring.mapping.copy()
                 new_mapping.update(mapping)
             else:
                 new_mapping = mapping
-            tstring = TranslationString(tstring, domain=domain, mapping=new_mapping, context=context)
+            tstring = TranslationString(
+                tstring, domain=domain, mapping=new_mapping, context=context
+            )
         translated = tstring
         domain = domain or tstring.domain
         context = context or tstring.context
@@ -329,10 +328,7 @@ def ungettext_policy(translations, singular, plural, n, domain, context):
     """ A pluralizer policy function which unconditionally uses the
     ``ungettext`` API on the translations object."""
 
-    if PY3: # pragma: no cover
-        _gettext = translations.ngettext
-    else: # pragma: no cover
-        _gettext = translations.ungettext
+    _gettext = translations.ngettext
 
     if context:
 	# Workaround for http://bugs.python.org/issue2504?
@@ -358,10 +354,7 @@ def dungettext_policy(translations, singular, plural, n, domain, context):
     if getattr(translations, 'dungettext', None) is not None:
         translated = translations.dungettext(domain, msgid, plural, n)
     else:
-        if PY3: # pragma: no cover
-            _gettext = translations.ngettext
-        else: # pragma: no cover
-            _gettext = translations.ungettext
+        _gettext = translations.ngettext
 
         translated = _gettext(msgid, plural, n)
     return singular if translated == msgid else translated
@@ -400,9 +393,11 @@ def Pluralizer(translations=None, policy=None):
         policy = dungettext_policy
     if translations is None:
         translations = NullTranslations()
-    def pluralizer(singular, plural, n, domain=None, mapping=None, context=None):
+    def pluralizer(
+        singular, plural, n, domain=None, mapping=None, context=None
+    ):
         """ Pluralize this object """
-        translated = text_type(
+        translated = str(
             policy(translations, singular, plural, n, domain, context))
         if translated and '$' in translated and mapping:
             return TranslationString(translated, mapping=mapping).interpolate()

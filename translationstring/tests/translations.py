@@ -1,5 +1,4 @@
 import gettext
-from translationstring.compat import PY3
 
 class Translations(gettext.GNUTranslations, object):
     """An extended translation catalog class."""
@@ -42,21 +41,13 @@ class Translations(gettext.GNUTranslations, object):
         """Like ``ugettext()``, but look the message up in the specified
         domain.
         """
-        if PY3: # pragma: no cover
-            return self._domains.get(domain, self).gettext(message)
-        else: # pragma: no cover
-            return self._domains.get(domain, self).ugettext(message)
+        return self._domains.get(domain, self).gettext(message)
     
     def dungettext(self, domain, singular, plural, num):
         """Like ``ungettext()`` but look the message up in the specified
         domain.
         """
-        if PY3: # pragma: no cover
-            return self._domains.get(domain, self).ngettext(
-                singular, plural, num)
-        else: # pragma: no cover
-            return self._domains.get(domain, self).ungettext(
-                singular, plural, num)
+        return self._domains.get(domain, self).ngettext(singular, plural, num)
         
     # Most of the downwards code, until it get's included in stdlib, from:
     #    http://bugs.python.org/file10036/gettext-pgettext.patch
