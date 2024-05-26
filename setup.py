@@ -18,6 +18,12 @@ docs_extras = [
     'pylons-sphinx-themes',
 ]
 
+testing_extras = [
+    'pytest',
+    'pytest-cov',
+    'coverage'
+]
+
 setup(
     name='translationstring',
     version='1.4dev',
@@ -27,12 +33,13 @@ setup(
     classifiers=[
       "Development Status :: 5 - Production/Stable",
       "Intended Audience :: Developers",
-      "Programming Language :: Python :: 2",
-      "Programming Language :: Python :: 2.7",
       "Programming Language :: Python :: 3",
-      "Programming Language :: Python :: 3.3",
-      "Programming Language :: Python :: 3.4",
-      "Programming Language :: Python :: 3.5",
+      "Programming Language :: Python :: 3.8",
+      "Programming Language :: Python :: 3.9",
+      "Programming Language :: Python :: 3.10",
+      "Programming Language :: Python :: 3.11",
+      "Programming Language :: Python :: 3.12",
+      "Programming Language :: Python :: 3.13",
       "Programming Language :: Python :: Implementation :: CPython",
       "Programming Language :: Python :: Implementation :: PyPy",
       "Topic :: Software Development :: Libraries :: Python Modules",
@@ -40,6 +47,7 @@ setup(
       "Topic :: Software Development :: Localization",
       "License :: Repoze Public License",
     ],
+    python_requires='>=3.8',
     keywords='i18n l10n internationalization localization gettext chameleon',
     author="Chris McDonough, Agendaless Consulting",
     author_email="pylons-discuss@googlegroups.com",
@@ -50,6 +58,8 @@ setup(
     zip_safe=False,
     test_suite="translationstring",
     extras_require={
+        'test': testing_extras,
+        'testing': testing_extras,
         'docs': docs_extras,
     },
 )

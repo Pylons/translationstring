@@ -1,6 +1,17 @@
 translationstring
 =================
 
+2.0 (unreleased)
+----------------
+
+- Add support for Python 3.8 - 3.13.
+
+- Drop support for Python 2.7 and Python 3 < 3.8 (this release now adds
+  ``python_requires='>=3.8'``, so that older Python versions won't install
+  it.
+
+- Remove ``translationstring.compat`` module.
+
 1.4 (2020-07-09)
 ----------------
 
