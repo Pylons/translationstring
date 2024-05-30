@@ -6,7 +6,7 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
-CONTEXT_MASK = u'%s\x04%s'
+CONTEXT_MASK = '%s\x04%s'
 
 class TranslationString(str):
     """

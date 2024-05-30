@@ -75,48 +75,48 @@ class TestTranslationString(unittest.TestCase):
         inst = self._makeOne('This is $name version ${version}.',
                               mapping=mapping)
         result = inst.interpolate()
-        self.assertEqual(result, u'This is Zope version 3.')
+        self.assertEqual(result, 'This is Zope version 3.')
 
     def test_interpolate_subsitution_more_than_once(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne(
-            u"This is $name version ${version}. ${name} $version!",
+            "This is $name version ${version}. ${name} $version!",
             mapping=mapping)
         result = inst.interpolate()
-        self.assertEqual(result, u'This is Zope version 3. Zope 3!')
+        self.assertEqual(result, 'This is Zope version 3. Zope 3!')
 
     def test_interpolate_double_dollar_escape(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne('$$name', mapping=mapping)
         result = inst.interpolate()
-        self.assertEqual(result, u'$$name')
+        self.assertEqual(result, '$$name')
 
     def test_interpolate_missing_not_interpolated(self):
         mapping = {"name": "Zope", "version": 3}
         inst = self._makeOne(
-            u"This is $name $version. $unknown $$name $${version}.",
+            "This is $name $version. $unknown $$name $${version}.",
             mapping=mapping)
         result = inst.interpolate()
         self.assertEqual(result,
-                         u'This is Zope 3. $unknown $$name $${version}.')
+                         'This is Zope 3. $unknown $$name $${version}.')
 
     def test_interpolate_missing_mapping(self):
-        inst = self._makeOne(u"This is ${name}")
+        inst = self._makeOne("This is ${name}")
         result = inst.interpolate()
-        self.assertEqual(result, u'This is ${name}')
+        self.assertEqual(result, 'This is ${name}')
 
     def test_interpolate_passed_translated(self):
         mapping = {"name": "Zope", "version": 3}
-        inst = self._makeOne(u"This is ${name}", mapping = mapping)
+        inst = self._makeOne("This is ${name}", mapping = mapping)
         result = inst.interpolate('That is ${name}')
-        self.assertEqual(result, u'That is Zope')
+        self.assertEqual(result, 'That is Zope')
 
     def test___reduce__(self):
         klass = self._getTargetClass()
         inst = self._makeOne('msgid', default='default', domain='domain',
                              mapping='mapping')
         result = inst.__reduce__()
-        self.assertEqual(result, (klass, (u'msgid', 'domain', u'default',
+        self.assertEqual(result, (klass, ('msgid', 'domain', 'default',
                                           'mapping', None)))
 
     def test___getstate__(self):
@@ -124,7 +124,7 @@ class TestTranslationString(unittest.TestCase):
                              mapping='mapping')
         result = inst.__getstate__()
         self.assertEqual(result,
-                         (u'msgid', 'domain', u'default', 'mapping', None))
+                         ('msgid', 'domain', 'default', 'mapping', None))
 
 class TestTranslationStringFactory(unittest.TestCase):
 
@@ -210,10 +210,10 @@ class TestChameleonTranslate(unittest.TestCase):
         self.assertEqual(result, 'interpolated')
 
     def test_msgid_text_type_translator_is_None(self):
-        msgid = u'foo'
+        msgid = 'foo'
         translate = self._makeOne(None)
         result = translate(msgid)
-        self.assertEqual(result, u'foo')
+        self.assertEqual(result, 'foo')
 
     def test_msgid_translationstring_translator_is_not_None(self):
         msgid = DummyTranslationString()
@@ -322,15 +322,15 @@ class Test_ugettext_policy(unittest.TestCase):
 
     def test_msgctxt(self):
         translations = DummyTranslations('result')
-        result = self._callFUT(translations, u'p\xf8f', None, 'button')
-        self.assertEqual(translations.params, (u'button\x04p\xf8f',))
+        result = self._callFUT(translations, 'p\xf8f', None, 'button')
+        self.assertEqual(translations.params, ('button\x04p\xf8f',))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_no_translation_found(self):
-        input = u'p\xf8f'
+        input = 'p\xf8f'
         translations = DummyTranslations(input)
         result = self._callFUT(translations, input, None, 'button')
-        self.assertEqual(result, u'p\xf8f')
+        self.assertEqual(result, 'p\xf8f')
 
 class Test_dugettext_policy(unittest.TestCase):
 
@@ -375,25 +375,25 @@ class Test_dugettext_policy(unittest.TestCase):
 
     def test_msgctxt_from_tstring(self):
         translations = DummyTranslations('result')
-        tstring = DummyTranslationString(u'p\xf8f', context='button')
+        tstring = DummyTranslationString('p\xf8f', context='button')
         result = self._callFUT(translations, tstring, None)
         self.assertEqual(translations.params,
-                         ('messages', u'button\x04p\xf8f',))
+                         ('messages', 'button\x04p\xf8f',))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_override(self):
         translations = DummyTranslations('result')
-        tstring = DummyTranslationString(u'p\xf8f', context='other')
+        tstring = DummyTranslationString('p\xf8f', context='other')
         result = self._callFUT(translations, tstring, None, context='button')
         self.assertEqual(translations.params,
-                         ('messages', u'button\x04p\xf8f',))
+                         ('messages', 'button\x04p\xf8f',))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_no_translation_found(self):
-        translations = DummyTranslations(u'button\x04p\xf8f')
-        tstring = DummyTranslationString(u'p\xf8f', context='button')
+        translations = DummyTranslations('button\x04p\xf8f')
+        tstring = DummyTranslationString('p\xf8f', context='button')
         result = self._callFUT(translations, tstring, None)
-        self.assertEqual(result, u'p\xf8f')
+        self.assertEqual(result, 'p\xf8f')
 
 class Test_ungettext_policy(unittest.TestCase):
 
@@ -411,18 +411,18 @@ class Test_ungettext_policy(unittest.TestCase):
     def test_msgctxt(self):
         translations = DummyTranslations('result')
         result = self._callFUT(
-            translations, u'p\xf8f', 'plural', 1, context='button')
+            translations, 'p\xf8f', 'plural', 1, context='button')
         self.assertEqual(translations.params,
-                         (u'button\x04p\xf8f', 'plural', 1))
+                         ('button\x04p\xf8f', 'plural', 1))
         self.assertEqual(result, 'result')
 
     def test_msgctxt_no_translation(self):
-        translations = DummyTranslations(u'button\x04p\xf8f')
+        translations = DummyTranslations('button\x04p\xf8f')
         result = self._callFUT(
-            translations, u'p\xf8f', 'plural', 1, context='button')
+            translations, 'p\xf8f', 'plural', 1, context='button')
         self.assertEqual(translations.params,
-                         (u'button\x04p\xf8f', 'plural', 1))
-        self.assertEqual(result, u'p\xf8f')
+                         ('button\x04p\xf8f', 'plural', 1))
+        self.assertEqual(result, 'p\xf8f')
 
 class Test_dungettext_policy(unittest.TestCase):
 
