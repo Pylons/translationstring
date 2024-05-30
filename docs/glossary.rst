@@ -22,11 +22,9 @@ Glossary
 
    Translation Domain
      A string representing the "domain" in which a particular
-     translation was made.  For example the word "java" might be
-     translated differently if the translation domain is
-     "programming-languages" than would be if the translation domain
-     was "coffee".  Every :term:`translation string` has an associated
-     translation domain.
+     translation was made.  Normally represents the project / package name
+     that defines the term.  Every :term:`translation string` has an
+     associated translation domain.
 
    Translation Context
      An optional string added to help resolve translation ambiguities
