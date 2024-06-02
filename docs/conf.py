@@ -13,7 +13,7 @@
 # out serve to show the default value.
 
 import sys, os, datetime
-import pkg_resources
+from importlib import metadata
 import pylons_sphinx_themes
 
 # General configuration
@@ -41,7 +41,7 @@ copyright = '2011-%s, Agendaless Consulting <pylons-discuss@googlegroups.com>' %
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution('translationstring').version
+version = metadata.version('translationstring')
 # The full version, including alpha/beta/rc tags.
 release = version
 
